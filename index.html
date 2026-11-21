@@ -6,84 +6,152 @@
   <title>FF 3-Match Standings PDF Sheet</title>
   <style>
     :root {
-      --bg: #0a0a0d;
-      --card: #131318;
-      --card2: #1b1b22;
-      --border: #2a2a35;
-      --red: #e50914;
-      --red-dark: #9e0008;
-      --gold: #f5b942;
-      --text: #f3f4f6;
+      --bg: #070709;
+      --surface: #101015;
+      --surface-2: #17171f;
+      --surface-hover: #1e1e28;
+      --border: #272734;
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --crimson: #e11d2e;
+      --crimson-deep: #7f0d16;
+      --crimson-glow: rgba(225, 29, 46, 0.22);
+      --gold: #fbbf24;
+      --silver: #d1d5db;
+      --bronze: #f59e0b;
+      --emerald: #10b981;
+      --text: #f9fafb;
       --muted: #9ca3af;
-      --green: #10b981;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(225, 29, 46, 0.14), transparent 36%),
+        radial-gradient(circle at top left, rgba(127, 13, 22, 0.12), transparent 40%),
+        var(--bg);
       color: var(--text);
       padding: 12px;
-      padding-bottom: 50px;
+      padding-bottom: 56px;
+      min-height: 100vh;
     }
+
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
     .header {
-      background: linear-gradient(135deg, #1a0608 0%, #111116 100%);
-      border: 1px solid #3b1216;
-      border-radius: 14px;
-      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1b070a 0%, #111117 55%, #16090c 100%);
+      border: 1px solid rgba(225, 29, 46, 0.35);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 24px var(--crimson-glow);
+      border-radius: 16px;
+      padding: 15px 16px;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
-    .header h1 { margin: 0; font-size: 18px; color: #fff; }
-    .header p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--crimson), #ff4d5a, transparent);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #ffffff;
+    }
+
+    .header p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
     .badge {
-      background: #065f46;
-      border: 1px solid var(--green);
-      color: #fff;
+      background: linear-gradient(135deg, rgba(225, 29, 46, 0.25), rgba(127, 13, 22, 0.45));
+      border: 1px solid rgba(255, 77, 90, 0.55);
+      color: #ffe4e6;
       font-size: 11px;
-      font-weight: 700;
-      padding: 5px 9px;
-      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 6px 10px;
+      border-radius: 999px;
       white-space: nowrap;
     }
+
     .card {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
       padding: 14px;
       margin-bottom: 12px;
     }
+
     .card-title {
       font-size: 14px;
-      font-weight: 700;
-      margin: 0 0 10px;
-      color: #fff;
+      font-weight: 800;
+      margin: 0 0 11px;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
     }
-    .row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-    input[type="text"], input[type="number"], textarea {
+
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .row:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
       width: 100%;
-      background: var(--card2);
+      background: var(--surface-2);
       border: 1px solid var(--border);
-      color: #fff;
-      padding: 10px 11px;
-      border-radius: 9px;
+      color: #ffffff;
+      padding: 10px 12px;
+      border-radius: 10px;
       font-size: 13px;
       outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    input:focus, textarea:focus { border-color: var(--red); }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(225, 29, 46, 0.18);
+    }
+
     button {
-      background: var(--card2);
-      color: #fff;
+      background: var(--surface-2);
+      color: #ffffff;
       border: 1px solid var(--border);
       padding: 11px 13px;
-      border-radius: 10px;
+      border-radius: 11px;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
@@ -93,101 +161,231 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
     }
-    button:active { transform: scale(0.98); }
-    .btn-red {
-      background: linear-gradient(135deg, var(--red), var(--red-dark));
-      border-color: #ff2e38;
-      color: #fff;
+
+    button:hover {
+      background: var(--surface-hover);
+      border-color: #3a3a4d;
     }
-    .btn-green { background: #065f46; border-color: #10b981; color: #fff; }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-crimson {
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-deep));
+      border-color: #ff3b4b;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(225, 29, 46, 0.28);
+    }
+
+    .btn-crimson:hover {
+      background: linear-gradient(135deg, #f02436, #96101b);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, #059669, #064e3b);
+      border-color: #10b981;
+      color: #ffffff;
+    }
+
     .btn-gold {
-      background: linear-gradient(135deg, #d97706, #92400e);
-      border-color: #f59e0b;
-      color: #fff;
+      background: linear-gradient(135deg, #d97706, #78350f);
+      border-color: #fbbf24;
+      color: #ffffff;
       width: 100%;
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.22);
     }
+
     .status-bar {
-      background: #0d1117;
-      border: 1px solid #263040;
-      border-left: 4px solid var(--green);
+      background: #0c0e13;
+      border: 1px solid #222634;
+      border-left: 4px solid var(--crimson);
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 12px;
       color: #e5e7eb;
       margin-top: 10px;
-      line-height: 1.45;
+      line-height: 1.5;
       word-break: break-word;
     }
+
     .tabs {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
-      margin-bottom: 10px;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: #0c0c10;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
     }
-    .tab-btn { padding: 10px 3px; font-size: 11px; background: var(--card2); border: 1px solid var(--border); }
-    .tab-btn.active { background: var(--red); border-color: #ff4d57; color: #fff; }
+
+    .tab-btn {
+      padding: 9px 4px;
+      font-size: 11px;
+      min-height: 38px;
+      border-radius: 9px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-deep));
+      border-color: #ff4454;
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(225, 29, 46, 0.35);
+    }
+
     .roster-card {
-      background: var(--card2);
+      background: var(--surface-2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px;
       margin-bottom: 8px;
     }
+
     .roster-head {
       font-size: 12px;
       font-weight: 800;
       color: var(--gold);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+
     .roster-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 7px;
     }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th, td { padding: 7px 4px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; }
-    th { color: var(--muted); font-size: 11px; text-transform: uppercase; background: #101015; }
-    td.team-col, th.team-col { text-align: left; }
-    .mini-input { padding: 7px 4px !important; font-size: 13px !important; text-align: center; min-height: 36px; }
-    .igl-sub { display: block; font-size: 10px; color: #fbbf24; margin-top: 2px; font-weight: 600; }
-    .rank-1 { color: #fbbf24; font-weight: 800; }
-    .rank-2 { color: #e5e7eb; font-weight: 800; }
-    .rank-3 { color: #f59e0b; font-weight: 800; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border-soft);
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: #0d0d12;
+      border-bottom: 1px solid rgba(225, 29, 46, 0.35);
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    tbody tr.top-row-1 {
+      background: linear-gradient(90deg, rgba(251, 191, 36, 0.12), rgba(225, 29, 46, 0.06), transparent);
+    }
+
+    td.team-col,
+    th.team-col {
+      text-align: left;
+      padding-left: 6px;
+    }
+
+    .mini-input {
+      padding: 7px 4px !important;
+      font-size: 13px !important;
+      font-weight: 700;
+      text-align: center;
+      min-height: 36px;
+      border-radius: 8px !important;
+    }
+
+    .igl-sub {
+      display: block;
+      font-size: 10px;
+      color: var(--gold);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .rank-pill {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    .rank-1 {
+      background: rgba(251, 191, 36, 0.18);
+      color: var(--gold);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
+
+    .rank-2 {
+      background: rgba(209, 213, 219, 0.14);
+      color: var(--silver);
+      border: 1px solid rgba(209, 213, 219, 0.35);
+    }
+
+    .rank-3 {
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--bronze);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .tot-pts {
+      color: #ff4d5a;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.94);
+      background: rgba(0, 0, 0, 0.92);
       z-index: 999;
       padding: 10px;
       align-items: flex-start;
       justify-content: center;
       overflow-y: auto;
     }
+
     .modal-box {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 14px;
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       margin: 12px auto;
     }
+
     .pdf-sheet {
       background: #ffffff;
       color: #111827;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
-      border: 2px solid #e50914;
+      border: 2px solid #dc2626;
     }
+
     .pdf-header {
       text-align: center;
-      border-bottom: 2px solid #e50914;
+      border-bottom: 2px solid #dc2626;
       padding-bottom: 10px;
       margin-bottom: 12px;
     }
+
     .pdf-header h2 {
       margin: 0;
       font-size: 20px;
@@ -195,18 +393,21 @@
       color: #111827;
       letter-spacing: 0.5px;
     }
+
     .pdf-header p {
       margin: 4px 0 0;
       font-size: 12px;
       font-weight: 700;
       color: #b91c1c;
     }
+
     .pdf-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 12px;
       color: #111827;
     }
+
     .pdf-table th {
       background: #111827;
       color: #ffffff;
@@ -214,86 +415,104 @@
       font-size: 11px;
       border: 1px solid #374151;
     }
+
     .pdf-table td {
       padding: 6px 4px;
       border: 1px solid #d1d5db;
       text-align: center;
       color: #111827;
     }
-    .pdf-table td.team-left, .pdf-table th.team-left {
+
+    .pdf-table td.team-left,
+    .pdf-table th.team-left {
       text-align: left;
       padding-left: 6px;
     }
-    .pdf-top1 { background: #fef3c7; font-weight: 800; }
+
+    .pdf-top1 {
+      background: #fef3c7;
+      font-weight: 800;
+    }
+
     .pdf-footer {
       margin-top: 10px;
       text-align: center;
       font-size: 11px;
       color: #4b5563;
-      font-weight: 600;
+      font-weight: 700;
     }
+
     @media print {
-      body > *:not(#pdfModal) { display: none !important; }
+      body > *:not(#pdfModal) {
+        display: none !important;
+      }
       #pdfModal {
         display: block !important;
         position: static !important;
-        background: #fff !important;
+        background: #ffffff !important;
         padding: 0 !important;
       }
-      .no-print { display: none !important; }
-      .pdf-sheet { border: none !important; padding: 0 !important; margin: 0 !important; }
+      .no-print {
+        display: none !important;
+      }
+      .pdf-sheet {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
     }
   </style>
 </head>
 <body>
-
-  <div class="header">
-    <div>
-      <h1>FF 3-MATCH POINTS PRO</h1>
-      <p>Screenshot-Ready PDF Sheet • HopWeb Safe</p>
-    </div>
-    <span class="badge">PDF SHEET</span>
-  </div>
-
-  <!-- 1. Tournament Info -->
-  <div class="card">
-    <div class="card-title">1. Tournament Details</div>
-    <div class="row">
-      <input type="text" id="tourneyTitle" value="NIGHTMARE X SCRIMS" placeholder="Tournament Name" />
-    </div>
-    <div class="row">
-      <input type="text" id="tourneySub" value="3-MATCH OVERALL STANDINGS" placeholder="Subtitle / Stage" />
-    </div>
-    <div class="status-bar" id="statusBar">Ready! স্লট লিস্ট পেস্ট করো বা Match 1–3 ট্যাবে Rank ও Kills বসাও।</div>
-  </div>
-
-  <!-- 2. Roster & 3-Match Score Editor -->
-  <div class="card">
-    <div class="card-title">
-      <span>2. Teams, IGL &amp; 3-Match Scores</span>
-      <button type="button" id="openPasteBtn" class="btn-green" style="padding:6px 11px; min-height:34px; font-size:12px;">📋 Paste Slot List</button>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1>FF 3-MATCH POINTS PRO</h1>
+        <p>Black &amp; Crimson Esports Edition • Offline PDF Ready</p>
+      </div>
+      <span class="badge">LIVE SHEET</span>
     </div>
 
-    <div class="tabs">
-      <button type="button" class="tab-btn active" data-tab="0">Overall</button>
-      <button type="button" class="tab-btn" data-tab="1">Match 1</button>
-      <button type="button" class="tab-btn" data-tab="2">Match 2</button>
-      <button type="button" class="tab-btn" data-tab="3">Match 3</button>
-      <button type="button" class="tab-btn" data-tab="4">Slot List</button>
+    <!-- 1. Tournament Info -->
+    <div class="card">
+      <div class="card-title">1. Tournament Details</div>
+      <div class="row">
+        <input type="text" id="tourneyTitle" value="NIGHTMARE X SCRIMS" placeholder="Tournament Name" />
+      </div>
+      <div class="row">
+        <input type="text" id="tourneySub" value="3-MATCH OVERALL STANDINGS" placeholder="Subtitle / Stage" />
+      </div>
+      <div class="status-bar" id="statusBar">Ready! স্লট লিস্ট পেস্ট করো বা Match 1–3 ট্যাবে Rank ও Kills বসাও।</div>
     </div>
 
-    <div id="mainContent"></div>
-  </div>
+    <!-- 2. Roster & 3-Match Score Editor -->
+    <div class="card">
+      <div class="card-title">
+        <span>2. Teams, IGL &amp; 3-Match Scores</span>
+        <button type="button" id="openPasteBtn" class="btn-emerald" style="padding:6px 11px; min-height:34px; font-size:12px;">📋 Paste Slot List</button>
+      </div>
 
-  <!-- 3. Export Actions -->
-  <div class="card">
-    <div class="card-title">3. PDF Sheet &amp; Screenshot</div>
-    <div class="row">
-      <button type="button" id="openPdfSheetBtn" class="btn-gold">📄 OPEN PDF STANDINGS SHEET</button>
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-tab="0">Overall</button>
+        <button type="button" class="tab-btn" data-tab="1">Match 1</button>
+        <button type="button" class="tab-btn" data-tab="2">Match 2</button>
+        <button type="button" class="tab-btn" data-tab="3">Match 3</button>
+        <button type="button" class="tab-btn" data-tab="4">Slot List</button>
+      </div>
+
+      <div id="mainContent"></div>
     </div>
-    <div class="row">
-      <button type="button" id="copyTextBtn" style="flex:1;">📋 Copy WhatsApp Text</button>
-      <button type="button" id="resetScoresBtn" style="flex:1;">🔄 Reset Scores</button>
+
+    <!-- 3. Export Actions -->
+    <div class="card">
+      <div class="card-title">3. PDF Sheet &amp; Sharing</div>
+      <div class="row">
+        <button type="button" id="openPdfSheetBtn" class="btn-gold">📄 OPEN PDF STANDINGS SHEET</button>
+      </div>
+      <div class="row">
+        <button type="button" id="copyTextBtn" class="btn-crimson" style="flex:1;">📋 Copy WhatsApp Text</button>
+        <button type="button" id="resetScoresBtn" style="flex:1;">🔄 Reset Scores</button>
+      </div>
     </div>
   </div>
 
@@ -306,7 +525,7 @@
       </p>
       <textarea id="pasteArea" rows="11" placeholder="1. ETERNAL KINGS - EK MAJESTY&#10;2. LYCAN ESPORTS - LYCN.ORINO&#10;..."></textarea>
       <div class="row" style="margin-top:10px;">
-        <button type="button" id="applyPasteBtn" class="btn-red" style="flex:1;">⚡ Apply Slot List</button>
+        <button type="button" id="applyPasteBtn" class="btn-crimson" style="flex:1;">⚡ Apply Slot List</button>
         <button type="button" id="closePasteBtn" style="flex:1;">Cancel</button>
       </div>
     </div>
@@ -316,8 +535,8 @@
   <div class="modal" id="pdfModal">
     <div class="modal-box">
       <div class="row no-print" style="margin-bottom:10px;">
-        <button type="button" id="printPdfBtn" class="btn-green" style="flex:1;">🖨️ Save / Print PDF</button>
-        <button type="button" id="closePdfBtn" class="btn-red" style="flex:1;">✕ Close</button>
+        <button type="button" id="printPdfBtn" class="btn-emerald" style="flex:1;">🖨️ Save / Print PDF</button>
+        <button type="button" id="closePdfBtn" class="btn-crimson" style="flex:1;">✕ Close</button>
       </div>
       <p class="no-print" style="font-size:11px;color:#fbbf24;margin:0 0 10px;line-height:1.4;">
         নিচের পরিষ্কার Sheet-এর <b>Screenshot</b> নিয়ে রাখতে পারো, অথবা <b>Save / Print PDF</b> চাপো।
@@ -513,11 +732,12 @@
             <tbody>
         `;
         sorted.forEach((t, idx) => {
-          const rankClass = idx === 0 ? "rank-1" : idx === 1 ? "rank-2" : idx === 2 ? "rank-3" : "";
+          const rankClass = idx === 0 ? "rank-pill rank-1" : idx === 1 ? "rank-pill rank-2" : idx === 2 ? "rank-pill rank-3" : "";
+          const rowClass = idx === 0 ? ' class="top-row-1"' : "";
           const iglLine = t.igl ? `<span class="igl-sub">IGL: ${escapeHtml(t.igl)}</span>` : "";
           html += `
-            <tr>
-              <td class="${rankClass}">#${idx + 1}</td>
+            <tr${rowClass}>
+              <td><span class="${rankClass}">#${idx + 1}</span></td>
               <td class="team-col">
                 <span style="font-weight:700;display:block;">${escapeHtml(t.name)}</span>
                 ${iglLine}
@@ -526,7 +746,7 @@
               <td style="color:#fbbf24;font-weight:700;">${t.booyah}</td>
               <td>${t.placePts}</td>
               <td>${t.kills}</td>
-              <td style="color:#ff4d57;font-weight:800;font-size:14px;">${t.total}</td>
+              <td class="tot-pts">${t.total}</td>
             </tr>
           `;
         });
