@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FF 3-Match Standings PDF Sheet</title>
+  <style>
+    :root {
+      --bg: #0a0a0d;
+      --card: #131318;
+      --card2: #1b1b22;
+      --border: #2a2a35;
+      --red: #e50914;
+      --red-dark: #9e0008;
+      --gold: #f5b942;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 12px;
+      padding-bottom: 50px;
+    }
+    .header {
+      background: linear-gradient(135deg, #1a0608 0%, #111116 100%);
+      border: 1px solid #3b1216;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .header h1 { margin: 0; font-size: 18px; color: #fff; }
+    .header p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+    .badge {
+      background: #065f46;
+      border: 1px solid var(--green);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+    input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 11px;
+      border-radius: 9px;
+      font-size: 13px;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--red); }
+    button {
+      background: var(--card2);
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 11px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    button:active { transform: scale(0.98); }
+    .btn-red {
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border-color: #ff2e38;
+      color: #fff;
+    }
+    .btn-green { background: #065f46; border-color: #10b981; color: #fff; }
+    .btn-gold {
+      background: linear-gradient(135deg, #d97706, #92400e);
+      border-color: #f59e0b;
+      color: #fff;
+      width: 100%;
+    }
+    .status-bar {
+      background: #0d1117;
+      border: 1px solid #263040;
+      border-left: 4px solid var(--green);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-top: 10px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .tab-btn { padding: 10px 3px; font-size: 11px; background: var(--card2); border: 1px solid var(--border); }
+    .tab-btn.active { background: var(--red); border-color: #ff4d57; color: #fff; }
+    .roster-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .roster-head {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .roster-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 7px 4px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; }
+    th { color: var(--muted); font-size: 11px; text-transform: uppercase; background: #101015; }
+    td.team-col, th.team-col { text-align: left; }
+    .mini-input { padding: 7px 4px !important; font-size: 13px !important; text-align: center; min-height: 36px; }
+    .igl-sub { display: block; font-size: 10px; color: #fbbf24; margin-top: 2px; font-weight: 600; }
+    .rank-1 { color: #fbbf24; font-weight: 800; }
+    .rank-2 { color: #e5e7eb; font-weight: 800; }
+    .rank-3 { color: #f59e0b; font-weight: 800; }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.94);
+      z-index: 999;
+      padding: 10px;
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      width: 100%;
+      max-width: 520px;
+      margin: 12px auto;
+    }
+    .pdf-sheet {
+      background: #ffffff;
+      color: #111827;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 2px solid #e50914;
+    }
+    .pdf-header {
+      text-align: center;
+      border-bottom: 2px solid #e50914;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .pdf-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: 0.5px;
+    }
+    .pdf-header p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #b91c1c;
+    }
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: #111827;
+    }
+    .pdf-table th {
+      background: #111827;
+      color: #ffffff;
+      padding: 7px 4px;
+      font-size: 11px;
+      border: 1px solid #374151;
+    }
+    .pdf-table td {
+      padding: 6px 4px;
+      border: 1px solid #d1d5db;
+      text-align: center;
+      color: #111827;
+    }
+    .pdf-table td.team-left, .pdf-table th.team-left {
+      text-align: left;
+      padding-left: 6px;
+    }
+    .pdf-top1 { background: #fef3c7; font-weight: 800; }
+    .pdf-footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: #4b5563;
+      font-weight: 600;
+    }
+    @media print {
+      body > *:not(#pdfModal) { display: none !important; }
+      #pdfModal {
+        display: block !important;
+        position: static !important;
+        background: #fff !important;
+        padding: 0 !important;
+      }
+      .no-print { display: none !important; }
+      .pdf-sheet { border: none !important; padding: 0 !important; margin: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>FF 3-MATCH POINTS PRO</h1>
+      <p>Screenshot-Ready PDF Sheet • HopWeb Safe</p>
+    </div>
+    <span class="badge">PDF SHEET</span>
+  </div>
+
+  <!-- 1. Tournament Info -->
+  <div class="card">
+    <div class="card-title">1. Tournament Details</div>
+    <div class="row">
+      <input type="text" id="tourneyTitle" value="NIGHTMARE X SCRIMS" placeholder="Tournament Name" />
+    </div>
+    <div class="row">
+      <input type="text" id="tourneySub" value="3-MATCH OVERALL STANDINGS" placeholder="Subtitle / Stage" />
+    </div>
+    <div class="status-bar" id="statusBar">Ready! স্লট লিস্ট পেস্ট করো বা Match 1–3 ট্যাবে Rank ও Kills বসাও।</div>
+  </div>
+
+  <!-- 2. Roster & 3-Match Score Editor -->
+  <div class="card">
+    <div class="card-title">
+      <span>2. Teams, IGL &amp; 3-Match Scores</span>
+      <button type="button" id="openPasteBtn" class="btn-green" style="padding:6px 11px; min-height:34px; font-size:12px;">📋 Paste Slot List</button>
+    </div>
+
+    <div class="tabs">
+      <button type="button" class="tab-btn active" data-tab="0">Overall</button>
+      <button type="button" class="tab-btn" data-tab="1">Match 1</button>
+      <button type="button" class="tab-btn" data-tab="2">Match 2</button>
+      <button type="button" class="tab-btn" data-tab="3">Match 3</button>
+      <button type="button" class="tab-btn" data-tab="4">Slot List</button>
+    </div>
+
+    <div id="mainContent"></div>
+  </div>
+
+  <!-- 3. Export Actions -->
+  <div class="card">
+    <div class="card-title">3. PDF Sheet &amp; Screenshot</div>
+    <div class="row">
+      <button type="button" id="openPdfSheetBtn" class="btn-gold">📄 OPEN PDF STANDINGS SHEET</button>
+    </div>
+    <div class="row">
+      <button type="button" id="copyTextBtn" style="flex:1;">📋 Copy WhatsApp Text</button>
+      <button type="button" id="resetScoresBtn" style="flex:1;">🔄 Reset Scores</button>
+    </div>
+  </div>
+
+  <!-- Paste Slot List Modal -->
+  <div class="modal" id="pasteModal">
+    <div class="modal-box">
+      <div class="card-title">📋 Paste Full Slot List</div>
+      <p style="font-size:11px;color:#9ca3af;margin:0 0 8px;line-height:1.45;">
+        WhatsApp-এর পুরো <b>Slot List</b> একসাথে পেস্ট করো:
+      </p>
+      <textarea id="pasteArea" rows="11" placeholder="1. ETERNAL KINGS - EK MAJESTY&#10;2. LYCAN ESPORTS - LYCN.ORINO&#10;..."></textarea>
+      <div class="row" style="margin-top:10px;">
+        <button type="button" id="applyPasteBtn" class="btn-red" style="flex:1;">⚡ Apply Slot List</button>
+        <button type="button" id="closePasteBtn" style="flex:1;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clean PDF Sheet Modal (For Screenshot & Print) -->
+  <div class="modal" id="pdfModal">
+    <div class="modal-box">
+      <div class="row no-print" style="margin-bottom:10px;">
+        <button type="button" id="printPdfBtn" class="btn-green" style="flex:1;">🖨️ Save / Print PDF</button>
+        <button type="button" id="closePdfBtn" class="btn-red" style="flex:1;">✕ Close</button>
+      </div>
+      <p class="no-print" style="font-size:11px;color:#fbbf24;margin:0 0 10px;line-height:1.4;">
+        নিচের পরিষ্কার Sheet-এর <b>Screenshot</b> নিয়ে রাখতে পারো, অথবা <b>Save / Print PDF</b> চাপো।
+      </p>
+
+      <div class="pdf-sheet" id="pdfSheetContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const PLACEMENT_PTS = {
+      1: 12, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5,
+      7: 4, 8: 3, 9: 2, 10: 1, 11: 0, 12: 0
+    };
+    const KILL_PT = 1;
+
+    let currentTab = 0;
+
+    function parseSlotLine(rawLine) {
+      let line = rawLine.trim();
+      if (!line) return null;
+      if (/^(📋\s*)?slot\s*list\s*:?$/i.test(line)) return null;
+
+      line = line.replace(/^\s*\d+\s*[\.\)\:\-]\s*/, "").trim();
+      if (!line) return null;
+
+      let teamPart = line;
+      let iglPart = "";
+      const dashMatch = line.match(/^(.+?)\s*[-–—|]\s*(.+)$/);
+      if (dashMatch) {
+        teamPart = dashMatch[1].trim();
+        iglPart = dashMatch[2].trim();
+      }
+
+      teamPart = teamPart
+        .replace(/^(?:AER\s*)?TEAM\s*NAME\s*[:\-]\s*/i, "")
+        .replace(/[✅☑️✔️🔥⚡]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toUpperCase();
+
+      iglPart = iglPart
+        .replace(/^IGL\s*[:\-]\s*/i, "")
+        .replace(/[✅☑️✔️]/g, "")
+        .trim();
+
+      return { name: teamPart || "TEAM", igl: iglPart };
+    }
+
+    const DEFAULT_SLOT_TEXT = `📋 Slot List:
+
+1. ETERNAL KINGS - EK MAJESTY
+2. LYCAN ESPORTS - LYCN.ORINO
+3. BLACK PANTHER - BP  HUNTAR
+4. AER TEAM NAME :DANGAR - DANGERㅤ1x㊝
+5. NIGHTMARE X ✅ - NX  J!HAD
+6. ELITE HAVOC ✅ - EH.MIKAGE
+7. MAX FREM ✅ - MF RAJ!
+8. SΛVAGE X ✅ - ZYN TAMIM`;
+
+    function buildTeamsFromText(text, existingTeams = null) {
+      const parsedList = text
+        .split("\n")
+        .map(parseSlotLine)
+        .filter(Boolean);
+
+      return Array.from({ length: 12 }, (_, i) => {
+        const p = parsedList[i];
+        const prev = existingTeams && existingTeams[i] ? existingTeams[i] : null;
+        return {
+          slot: i + 1,
+          name: p ? p.name : (prev ? prev.name : `TEAM SLOT ${i + 1}`),
+          igl: p ? p.igl : (prev ? prev.igl : ""),
+          m1: prev ? prev.m1 : { rank: 0, kills: 0 },
+          m2: prev ? prev.m2 : { rank: 0, kills: 0 },
+          m3: prev ? prev.m3 : { rank: 0, kills: 0 }
+        };
+      });
+    }
+
+    let teams = buildTeamsFromText(DEFAULT_SLOT_TEXT);
+
+    try {
+      const savedTeams = localStorage.getItem("ff_offline_3match_v1");
+      if (savedTeams) teams = JSON.parse(savedTeams);
+      const savedTitle = localStorage.getItem("ff_tourney_title");
+      if (savedTitle) document.getElementById("tourneyTitle").value = savedTitle;
+      const savedSub = localStorage.getItem("ff_tourney_sub");
+      if (savedSub) document.getElementById("tourneySub").value = savedSub;
+    } catch (e) {}
+
+    function setStatus(msg) {
+      document.getElementById("statusBar").textContent = msg;
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem("ff_offline_3match_v1", JSON.stringify(teams));
+        localStorage.setItem("ff_tourney_title", document.getElementById("tourneyTitle").value);
+        localStorage.setItem("ff_tourney_sub", document.getElementById("tourneySub").value);
+      } catch (e) {}
+    }
+
+    function bindTap(id, handler) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", handler);
+    }
+
+    function getSortedOverall() {
+      return teams.map(t => {
+        const mList = [t.m1, t.m2, t.m3];
+        let booyah = 0, placePts = 0, kills = 0, played = 0;
+        mList.forEach(m => {
+          const r = Number(m.rank) || 0;
+          const k = Number(m.kills) || 0;
+          if (r > 0 || k > 0) played++;
+          if (r === 1) booyah++;
+          placePts += (PLACEMENT_PTS[r] || 0);
+          kills += k;
+        });
+        const killPts = kills * KILL_PT;
+        const total = placePts + killPts;
+        return { ...t, played, booyah, placePts, kills, killPts, total };
+      }).sort((a, b) => {
+        if (b.total !== a.total) return b.total - a.total;
+        if (b.booyah !== a.booyah) return b.booyah - a.booyah;
+        if (b.kills !== a.kills) return b.kills - a.kills;
+        if (b.placePts !== a.placePts) return b.placePts - a.placePts;
+        return a.slot - b.slot;
+      });
+    }
+
+    function updateTabs() {
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.tab) === currentTab);
+      });
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentTab = Number(btn.dataset.tab);
+        updateTabs();
+        renderView();
+      });
+    });
+
+    function renderView() {
+      const container = document.getElementById("mainContent");
+
+      if (currentTab === 4) {
+        let html = `<p style="font-size:11px;color:#9ca3af;margin:0 0 10px;">ওপরের <b>"📋 Paste Slot List"</b> বাটনে একসাথে সব পেস্ট করতে পারো, অথবা নিচে টিম ও IGL নাম এডিট করো:</p>`;
+        teams.forEach((t, idx) => {
+          html += `
+            <div class="roster-card">
+              <div class="roster-head"><span>SLOT #${t.slot}</span></div>
+              <div class="roster-grid">
+                <input type="text" placeholder="Team Name" value="${escapeHtml(t.name)}" data-idx="${idx}" data-rtype="name" />
+                <input type="text" placeholder="IGL Name" value="${escapeHtml(t.igl || "")}" data-idx="${idx}" data-rtype="igl" style="color:#fbbf24;" />
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll("input").forEach(inp => {
+          inp.addEventListener("change", (e) => {
+            const idx = Number(e.target.dataset.idx);
+            const rtype = e.target.dataset.rtype;
+            if (rtype === "name") teams[idx].name = e.target.value.trim() || `TEAM SLOT ${idx + 1}`;
+            else if (rtype === "igl") teams[idx].igl = e.target.value.trim();
+            saveState();
+          });
+        });
+        return;
+      }
+
+      if (currentTab === 0) {
+        const sorted = getSortedOverall();
+        let html = `
+          <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th class="team-col">TEAM / IGL</th>
+                <th>M</th>
+                <th>B</th>
+                <th>P</th>
+                <th>K</th>
+                <th>TOT</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        sorted.forEach((t, idx) => {
+          const rankClass = idx === 0 ? "rank-1" : idx === 1 ? "rank-2" : idx === 2 ? "rank-3" : "";
+          const iglLine = t.igl ? `<span class="igl-sub">IGL: ${escapeHtml(t.igl)}</span>` : "";
+          html += `
+            <tr>
+              <td class="${rankClass}">#${idx + 1}</td>
+              <td class="team-col">
+                <span style="font-weight:700;display:block;">${escapeHtml(t.name)}</span>
+                ${iglLine}
+              </td>
+              <td>${t.played}</td>
+              <td style="color:#fbbf24;font-weight:700;">${t.booyah}</td>
+              <td>${t.placePts}</td>
+              <td>${t.kills}</td>
+              <td style="color:#ff4d57;font-weight:800;font-size:14px;">${t.total}</td>
+            </tr>
+          `;
+        });
+        html += `</tbody></table></div>`;
+        container.innerHTML = html;
+        return;
+      }
+
+      const mKey = `m${currentTab}`;
+      let html = `
+        <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>SLOT</th>
+              <th class="team-col">TEAM / IGL</th>
+              <th style="width:66px;">RANK</th>
+              <th style="width:62px;">KILLS</th>
+              <th>PTS</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      teams.forEach((t, idx) => {
+        const r = Number(t[mKey].rank) || 0;
+        const k = Number(t[mKey].kills) || 0;
+        const pts = (PLACEMENT_PTS[r] || 0) + (k * KILL_PT);
+        html += `
+          <tr>
+            <td style="color:#9ca3af;font-weight:700;">#${t.slot}</td>
+            <td class="team-col">
+              <div style="font-weight:700;font-size:12px;">${escapeHtml(t.name)}</div>
+              ${t.igl ? `<span class="igl-sub">IGL: ${escapeHtml(t.igl)}</span>` : ""}
+            </td>
+            <td>
+              <input type="number" min="0" max="12" class="mini-input" value="${r}" data-idx="${idx}" data-field="rank" />
+            </td>
+            <td>
+              <input type="number" min="0" max="99" class="mini-input" value="${k}" data-idx="${idx}" data-field="kills" />
+            </td>
+            <td style="font-weight:800;color:#10b981;">${pts}</td>
+          </tr>
+        `;
+      });
+      html += `</tbody></table></div>`;
+      container.innerHTML = html;
+
+      container.querySelectorAll("input").forEach(inp => {
+        inp.addEventListener("change", (e) => {
+          const idx = Number(e.target.dataset.idx);
+          const field = e.target.dataset.field;
+          if (field === "rank") {
+            teams[idx][mKey].rank = Math.max(0, Math.min(12, Number(e.target.value) || 0));
+          } else if (field === "kills") {
+            teams[idx][mKey].kills = Math.max(0, Number(e.target.value) || 0);
+          }
+          saveState();
+          renderView();
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+
+    bindTap("openPasteBtn", () => {
+      document.getElementById("pasteArea").value = "📋 Slot List:\n\n" + teams
+        .map(t => `${t.slot}. ${t.name}${t.igl ? " - " + t.igl : ""}`)
+        .join("\n");
+      document.getElementById("pasteModal").style.display = "flex";
+    });
+    bindTap("closePasteBtn", () => {
+      document.getElementById("pasteModal").style.display = "none";
+    });
+    bindTap("applyPasteBtn", () => {
+      teams = buildTeamsFromText(document.getElementById("pasteArea").value, teams);
+      saveState();
+      renderView();
+      document.getElementById("pasteModal").style.display = "none";
+      setStatus("✅ স্লট লিস্ট আপডেট হয়েছে! Match 1–3 ট্যাবে স্কোর বসাও।");
+    });
+
+    bindTap("resetScoresBtn", () => {
+      teams.forEach(t => {
+        t.m1 = { rank: 0, kills: 0 };
+        t.m2 = { rank: 0, kills: 0 };
+        t.m3 = { rank: 0, kills: 0 };
+      });
+      saveState();
+      renderView();
+      setStatus("সব স্কোর ০ করা হয়েছে।");
+    });
+
+    bindTap("copyTextBtn", async () => {
+      const title = document.getElementById("tourneyTitle").value.trim() || "FREE FIRE TOURNAMENT";
+      const sub = document.getElementById("tourneySub").value.trim() || "3-MATCH OVERALL STANDINGS";
+      const sorted = getSortedOverall();
+      let text = `🏆 *${title}*\n📊 _${sub}_\n\n`;
+      sorted.forEach((t, i) => {
+        const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
+        const iglTxt = t.igl ? ` (IGL: ${t.igl})` : "";
+        text += `${medal} *${t.name}*${iglTxt} — *${t.total} PTS* (B: ${t.booyah} | K: ${t.kills})\n`;
+      });
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("✅ WhatsApp রেজাল্ট টেক্সট কপি হয়েছে!");
+      } catch (e) {
+        prompt("Copy this text:", text);
+      }
+    });
+
+    bindTap("openPdfSheetBtn", () => {
+      saveState();
+      const title = (document.getElementById("tourneyTitle").value || "NIGHTMARE X SCRIMS").toUpperCase();
+      const sub = (document.getElementById("tourneySub").value || "3-MATCH OVERALL STANDINGS").toUpperCase();
+      const sorted = getSortedOverall();
+
+      let rowsHtml = "";
+      sorted.forEach((t, i) => {
+        const topClass = i === 0 ? ' class="pdf-top1"' : "";
+        const iglText = t.igl ? `<div style="font-size:10px;color:#374151;">IGL: ${escapeHtml(t.igl)}</div>` : "";
+        rowsHtml += `
+          <tr${topClass}>
+            <td>#${i + 1}</td>
+            <td class="team-left"><strong>${escapeHtml(t.name)}</strong>${iglText}</td>
+            <td>${t.played}</td>
+            <td>${t.booyah}</td>
+            <td>${t.placePts}</td>
+            <td>${t.kills}</td>
+            <td><strong>${t.total}</strong></td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("pdfSheetContent").innerHTML = `
+        <div class="pdf-header">
+          <h2>${escapeHtml(title)}</h2>
+          <p>${escapeHtml(sub)}</p>
+        </div>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="team-left">TEAM &amp; IGL</th>
+              <th>M</th>
+              <th>B</th>
+              <th>P</th>
+              <th>K</th>
+              <th>TOT</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+        <div class="pdf-footer">FF 3-MATCH STANDINGS SHEET</div>
+      `;
+
+      document.getElementById("pdfModal").style.display = "flex";
+      setStatus("✅ PDF Sheet খুলে গেছে—এখন Screenshot নিতে বা Save/Print PDF করতে পারো।");
+    });
+
+    bindTap("closePdfBtn", () => {
+      document.getElementById("pdfModal").style.display = "none";
+    });
+
+    bindTap("printPdfBtn", () => {
+      try {
+        window.print();
+      } catch (e) {
+        setStatus("ℹ️ প্রিন্ট ডায়ালগ না খুললে সরাসরি স্ক্রিনশট নাও।");
+      }
+    });
+
+    renderView();
+  </script>
+</body>
+</html>
