@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nightmare X | Free Fire Points Table Generator</title>
+  <title>Nightmare X Scrims | Standings &amp; Poster Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
-      --bg-dark: #070709;
-      --bg-card: #101116;
-      --bg-elevated: #171922;
-      --accent-red: #ff1e38;
-      --accent-red-glow: rgba(255, 30, 56, 0.35);
-      --accent-gold: #ffb800;
-      --text-main: #f4f5f7;
-      --text-muted: #9aa0b2;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-red: rgba(255, 30, 56, 0.45);
+      --bg-page: #090b10;
+      --bg-panel: #121622;
+      --bg-card: #181d2c;
+      --green-dark: #0f6b2f;
+      --green-mid: #169440;
+      --green-bright: #22c55e;
+      --gold: #facc15;
+      --red-accent: #ef4444;
+      --text-light: #f8fafc;
+      --text-dim: #94a3b8;
+      --border-soft: rgba(255, 255, 255, 0.09);
     }
 
     * {
@@ -30,1064 +31,694 @@
 
     body {
       font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
+      background: var(--bg-page);
+      color: var(--text-light);
+      padding: 16px 12px 60px;
       min-height: 100vh;
-      background-image:
-        radial-gradient(circle at 15% 10%, rgba(255, 30, 56, 0.14), transparent 35%),
-        radial-gradient(circle at 85% 20%, rgba(255, 184, 0, 0.07), transparent 30%),
-        linear-gradient(180deg, #070709 0%, #0b0c10 100%);
-      padding: 20px 14px 50px;
     }
 
-    .app-container {
-      max-width: 1120px;
+    .container {
+      max-width: 960px;
       margin: 0 auto;
     }
 
-    /* Top Control Bar */
-    .top-header {
+    .section-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-light);
+      margin-bottom: 12px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-left: 4px solid var(--accent-red);
-      border-radius: 14px;
-      padding: 16px 20px;
-      margin-bottom: 22px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
     }
 
-    .brand-title h1 {
-      font-size: clamp(1.35rem, 3vw, 1.9rem);
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .brand-title h1 span {
-      color: var(--accent-red);
-    }
-
-    .brand-title p {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    .header-actions {
-      display: flex;
-      flex-wrap: wrap;
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
     }
 
-    button, .btn-label {
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1.5fr 0.8fr 0.8fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      color: var(--text-light);
+      padding: 9px 11px;
+      border-radius: 8px;
       font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
-      font-weight: 600;
       font-size: 0.88rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--green-bright);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
+      font-weight: 700;
+      font-size: 0.86rem;
       border: none;
       border-radius: 9px;
-      padding: 10px 16px;
+      padding: 10px 15px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      text-decoration: none;
+      gap: 7px;
+      transition: transform 0.14s ease, opacity 0.2s ease;
     }
 
-    button:active, .btn-label:active {
+    button:active {
       transform: scale(0.97);
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #ff1e38, #c90b22);
+    .btn-green {
+      background: linear-gradient(135deg, #16a34a, #0f6b2f);
       color: #fff;
-      box-shadow: 0 6px 20px var(--accent-red-glow);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #ff334b, #df1029);
-    }
-
-    .btn-secondary {
-      background: var(--bg-elevated);
-      color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--border-red);
-      background: #1f222e;
     }
 
     .btn-gold {
-      background: linear-gradient(135deg, #ffb800, #e09600);
-      color: #090a0d;
-      box-shadow: 0 6px 18px rgba(255, 184, 0, 0.25);
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #0b0d12;
     }
 
-    /* Setup Grid */
-    .setup-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .panel {
+    .btn-dark {
       background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 18px;
+      color: var(--text-light);
+      border: 1px solid var(--border-soft);
     }
 
-    .panel-title {
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #fff;
-    }
-
-    .panel-title span.tag {
-      font-size: 0.72rem;
-      background: rgba(255, 30, 56, 0.16);
-      color: #ff586c;
-      border: 1px solid var(--border-red);
-      padding: 2px 8px;
-      border-radius: 99px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
-      font-size: 0.9rem;
-      padding: 9px 11px;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent-red);
-    }
-
-    .slot-list-editor {
-      max-height: 220px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-right: 4px;
-    }
-
-    .slot-item {
-      display: grid;
-      grid-template-columns: 44px 1fr 1fr auto;
-      gap: 6px;
-      align-items: center;
-      background: var(--bg-elevated);
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .slot-badge {
-      background: rgba(255, 30, 56, 0.18);
-      color: #ff4d62;
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-align: center;
-      padding: 6px 4px;
-      border-radius: 6px;
-    }
-
-    .slot-item input {
-      padding: 6px 8px;
-      font-size: 0.82rem;
-    }
-
-    .icon-btn {
-      background: rgba(255, 255, 255, 0.05);
-      color: #ff6477;
-      padding: 6px 9px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-    }
-
-    .status-msg {
-      font-size: 0.82rem;
-      margin-top: 8px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .status-msg.show {
-      display: block;
-    }
-
-    .status-msg.success {
-      color: #4ade80;
-      background: rgba(74, 222, 128, 0.08);
-      border: 1px solid rgba(74, 222, 128, 0.25);
-    }
-
-    .status-msg.error {
-      color: #fb7185;
-      background: rgba(251, 113, 133, 0.08);
-      border: 1px solid rgba(251, 113, 133, 0.25);
-    }
-
-    /* =========================================================
-       PREMIUM EXPORTABLE SCORECARD (DOWNLOADED AS HD PNG)
-       ========================================================= */
-    .export-wrapper {
-      margin-top: 10px;
-    }
-
-    .scorecard {
-      position: relative;
-      background:
-        radial-gradient(circle at 100% 0%, rgba(255, 30, 56, 0.22), transparent 42%),
-        radial-gradient(circle at 0% 100%, rgba(255, 184, 0, 0.12), transparent 38%),
-        linear-gradient(155deg, #0c0d12 0%, #12141d 55%, #0a0b0f 100%);
-      border: 1.5px solid rgba(255, 30, 56, 0.5);
+    /* =======================================================
+       POSTER / STANDINGS SHEET (DIRECT PIC DOWNLOAD TARGET)
+       ======================================================= */
+    .poster-frame {
+      background: #ffffff;
+      color: #0f172a;
       border-radius: 18px;
-      padding: 28px 26px 24px;
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+      padding: 18px 16px 14px;
+      border: 3px solid #14532d;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
     }
 
-    .scorecard::before {
+    /* Updated High-Impact Esports Banner */
+    .poster-banner {
+      position: relative;
+      background: linear-gradient(135deg, #071b10 0%, #0e3b1f 55%, #071b10 100%);
+      border: 2px solid #16a34a;
+      border-radius: 14px;
+      padding: 16px 14px 14px;
+      text-align: center;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .poster-banner::before {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--accent-red), var(--accent-gold), var(--accent-red));
+      background: linear-gradient(90deg, #22c55e, #facc15, #22c55e);
     }
 
-    .sc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 18px;
-    }
-
-    .sc-org {
-      font-size: 0.78rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent-gold);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .sc-title {
-      font-size: clamp(1.5rem, 3.6vw, 2.3rem);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      line-height: 1.05;
-      color: #ffffff;
-    }
-
-    .sc-title span {
-      color: var(--accent-red);
-    }
-
-    .sc-meta {
-      text-align: right;
-    }
-
-    .sc-stage-pill {
+    .banner-top-tag {
       display: inline-block;
-      background: linear-gradient(135deg, #ff1e38, #b8091e);
-      color: #fff;
+      font-size: 0.72rem;
       font-weight: 700;
-      font-size: 0.82rem;
+      letter-spacing: 2px;
+      color: #fde047;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      padding: 3px 12px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .banner-org {
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .banner-presents {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      color: #86efac;
+      text-transform: uppercase;
+      margin: 2px 0;
+      font-weight: 700;
+    }
+
+    .banner-main-title {
+      font-size: clamp(1.45rem, 4.5vw, 2.2rem);
+      font-weight: 700;
+      font-style: italic;
       letter-spacing: 1px;
       text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 6px;
-      margin-bottom: 6px;
+      background: linear-gradient(180deg, #ffffff 15%, #fde047 65%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+      margin: 2px 0 8px;
     }
 
-    .sc-submeta {
-      font-size: 0.82rem;
-      color: var(--text-muted);
+    .banner-stage-bar {
+      display: inline-block;
+      background: linear-gradient(90deg, #15803d, #22c55e, #15803d);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      padding: 5px 18px;
+      border-radius: 7px;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
 
-    .table-responsive {
+    /* Standings Box inside Poster */
+    .standings-box {
+      background: #14532d;
+      border-radius: 12px;
+      padding: 8px 8px 10px;
+    }
+
+    .standings-scroll {
       width: 100%;
       overflow-x: auto;
     }
 
-    table.points-table {
+    table.standings-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 7px;
-      min-width: 680px;
+      border-spacing: 0 5px;
+      min-width: 540px;
     }
 
-    table.points-table thead th {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      padding: 6px 12px;
-      text-align: left;
+    table.standings-table thead th {
+      color: #dcfce7;
+      font-size: 0.7rem;
       font-weight: 700;
-    }
-
-    table.points-table thead th.num,
-    table.points-table tbody td.num {
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 5px 7px;
       text-align: center;
     }
 
-    table.points-table tbody tr {
-      background: rgba(20, 23, 33, 0.88);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    table.standings-table thead th.left {
+      text-align: left;
     }
 
-    table.points-table tbody tr.rank-1 {
-      background: linear-gradient(90deg, rgba(255, 184, 0, 0.2), rgba(255, 30, 56, 0.14) 55%, rgba(20, 23, 33, 0.92));
-      box-shadow: inset 0 0 0 1px rgba(255, 184, 0, 0.55);
+    table.standings-table tbody tr {
+      background: #e6f6cf;
+      color: #0f172a;
     }
 
-    table.points-table tbody tr.rank-2 {
-      background: linear-gradient(90deg, rgba(226, 232, 240, 0.14), rgba(20, 23, 33, 0.92) 60%);
-      box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.35);
+    table.standings-table tbody tr.top-one {
+      background: linear-gradient(90deg, #fef08a, #dcfce7 65%, #e6f6cf);
     }
 
-    table.points-table tbody tr.rank-3 {
-      background: linear-gradient(90deg, rgba(217, 119, 6, 0.18), rgba(20, 23, 33, 0.92) 60%);
-      box-shadow: inset 0 0 0 1px rgba(217, 119, 6, 0.4);
-    }
-
-    table.points-table tbody td {
-      padding: 11px 12px;
-      font-size: 0.92rem;
+    table.standings-table tbody td {
+      padding: 6px 7px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
       vertical-align: middle;
     }
 
-    table.points-table tbody td:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+    table.standings-table tbody td.left {
+      text-align: left;
     }
 
-    table.points-table tbody td:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+    table.standings-table tbody td:first-child {
+      border-top-left-radius: 7px;
+      border-bottom-left-radius: 7px;
+      color: #15803d;
     }
 
-    .rank-badge {
+    table.standings-table tbody td:last-child {
+      border-top-right-radius: 7px;
+      border-bottom-right-radius: 7px;
+      background: rgba(21, 128, 61, 0.14);
+      color: #0f172a;
+      font-size: 0.88rem;
+    }
+
+    .logo-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
+      width: 26px;
+      height: 22px;
+      border-radius: 5px;
+      background: #0f5132;
+      color: #ffffff;
+      font-size: 0.68rem;
       font-weight: 700;
-      font-size: 0.85rem;
-      background: rgba(255, 255, 255, 0.07);
-      color: #fff;
+      letter-spacing: 0.5px;
     }
 
-    .rank-1 .rank-badge {
-      background: var(--accent-gold);
-      color: #090a0d;
-    }
-
-    .rank-2 .rank-badge {
-      background: #e2e8f0;
-      color: #090a0d;
-    }
-
-    .rank-3 .rank-badge {
-      background: #d97706;
-      color: #fff;
-    }
-
-    .team-name-cell {
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: #fff;
-    }
-
-    .igl-sub {
-      font-size: 0.74rem;
-      color: var(--text-muted);
+    .team-title {
       display: block;
-    }
-
-    .total-pts {
-      font-size: 1.05rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: var(--accent-gold);
+      color: #0f172a;
+      line-height: 1.1;
+      text-transform: uppercase;
     }
 
-    .rank-1 .total-pts {
-      color: #ffd04d;
+    .igl-line {
+      display: block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #334155;
+      line-height: 1.15;
+      margin-top: 1px;
     }
 
-    .sc-footer {
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.76rem;
-      color: var(--text-muted);
+    .poster-footer {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: #14532d;
+      margin-top: 10px;
+      text-transform: uppercase;
     }
 
-    .sc-footer strong {
-      color: var(--accent-red);
-      letter-spacing: 0.8px;
-    }
-
-    /* Quick Match Entry Modal / Inline Bar */
-    .quick-entry-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 16px 18px;
-      margin-bottom: 18px;
-    }
-
-    .quick-row {
+    .slots-list {
+      max-height: 190px;
+      overflow-y: auto;
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: end;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
     }
 
-    @media (max-width: 720px) {
-      .quick-row {
+    .slot-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 7px 9px;
+      display: grid;
+      grid-template-columns: 32px 1fr 1fr;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .slot-chip span {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #4ade80;
+      text-align: center;
+    }
+
+    .slot-chip input {
+      padding: 5px 7px;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 640px) {
+      .grid-4 {
         grid-template-columns: 1fr 1fr;
       }
-      .quick-row button {
+      .grid-4 button {
         grid-column: span 2;
-      }
-      .sc-meta {
-        text-align: left;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Top Header -->
-    <header class="top-header">
-      <div class="brand-title">
-        <h1>NIGHTMARE <span>X</span> POINTS TABLE</h1>
-        <p>Free Fire Esports Standings &amp; Ultra-HD Scorecard Generator</p>
-      </div>
-      <div class="header-actions">
-        <button id="downloadImgBtn" class="btn-gold" type="button">
-          📸 Download HD Image
-        </button>
-        <button id="resetScoresBtn" class="btn-secondary" type="button">
-          🔄 Reset Scores
+  <div class="container">
+    <!-- Banner & Match Config -->
+    <div class="section-card">
+      <div class="section-title">
+        <span>Banner &amp; Match Settings</span>
+        <button id="directDownloadPicBtn" class="btn-gold" type="button">
+          📥 Download Poster Pic (PNG)
         </button>
       </div>
-    </header>
-
-    <!-- Tournament & AI Scanner Setup -->
-    <section class="setup-grid">
-      <!-- Tournament & Points Rules -->
-      <div class="panel">
-        <div class="panel-title">
-          Tournament Info &amp; Rules
-          <span class="tag">LIVE CONFIG</span>
+      <div class="grid-2">
+        <div>
+          <label for="weekDayInput">Week &amp; Date Line</label>
+          <input type="text" id="weekDayInput" value="WEEK 01 • DAY 22/11/2026" />
         </div>
-        <div class="form-group">
-          <label for="tournamentTitle">Tournament / Event Name</label>
-          <input type="text" id="tournamentTitle" value="NIGHTMARE X INVITATIONAL" />
+        <div>
+          <label for="orgNameInput">Organization Name</label>
+          <input type="text" id="orgNameInput" value="NIGHTMARE X OFFICIAL" />
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="stageLabel">Stage / Match Info</label>
-            <input type="text" id="stageLabel" value="GRAND FINALS • OVERALL" />
-          </div>
-          <div class="form-group">
-            <label for="killPointValue">Points Per Kill</label>
-            <input type="number" id="killPointValue" value="1" min="0" max="20" />
-          </div>
+        <div>
+          <label for="bannerMainInput">Main Banner Title</label>
+          <input type="text" id="bannerMainInput" value="NIGHTMARE X SCRIMS" />
         </div>
-        <div class="form-group">
-          <label for="placementTable">Placement Points (1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th...)</label>
-          <input type="text" id="placementTable" value="12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0" />
+        <div>
+          <label for="stageBarInput">Standings Subtitle Bar</label>
+          <input type="text" id="stageBarInput" value="★ 3-MATCH OVERALL STANDINGS ★" />
         </div>
       </div>
+      <div class="btn-row">
+        <button id="copyWhatsappBtn" class="btn-green" type="button">📋 Copy WhatsApp Text</button>
+        <button id="resetScoresBtn" class="btn-dark" type="button">🔄 Reset Scores</button>
+      </div>
+    </div>
 
-      <!-- Registered Slots -->
-      <div class="panel">
-        <div class="panel-title">
-          Registered Teams / Slots
-          <button id="addSlotBtn" class="btn-secondary" type="button" style="padding: 5px 10px; font-size: 0.78rem;">+ Add Slot</button>
+    <!-- Quick Match Point Entry -->
+    <div class="section-card">
+      <div class="section-title">Add Match Result (CD / MP / PP / FP)</div>
+      <div class="grid-4">
+        <div>
+          <label for="teamSelect">Team / Slot</label>
+          <select id="teamSelect"></select>
         </div>
-        <div id="slotListEditor" class="slot-list-editor"></div>
+        <div>
+          <label for="rankInput">Rank (1–12)</label>
+          <input type="number" id="rankInput" min="1" max="12" value="1" />
+        </div>
+        <div>
+          <label for="killsInput">Kills (FP)</label>
+          <input type="number" id="killsInput" min="0" max="50" value="5" />
+        </div>
+        <button id="addMatchBtn" class="btn-green" type="button">+ Add Match</button>
       </div>
 
-      <!-- Gemini Screenshot Scanner -->
-      <div class="panel">
-        <div class="panel-title">
-          AI Screenshot Scan
-          <span class="tag">GEMINI API</span>
-        </div>
-        <div class="form-group">
-          <label for="geminiApiKey">Gemini API Key (Saved locally in browser)</label>
-          <input type="password" id="geminiApiKey" placeholder="AIzaSy..." />
-        </div>
-        <div class="form-group">
-          <label for="screenshotInput">Upload Match Result Screenshot</label>
-          <input type="file" id="screenshotInput" accept="image/*" />
-        </div>
-        <button id="scanScreenshotBtn" class="btn-primary" type="button" style="width: 100%;">
-          ⚡ Scan Screenshot &amp; Update Points
-        </button>
-        <div id="scanStatus" class="status-msg"></div>
-      </div>
-    </section>
+      <div id="slotsEditor" class="slots-list"></div>
+    </div>
 
-    <!-- Manual Match Result Entry -->
-    <section class="quick-entry-box">
-      <div class="panel-title" style="margin-bottom: 10px;">
-        Manual Match Entry
-        <span class="tag">QUICK ADD</span>
+    <!-- Poster Sheet Preview (Direct PNG Export) -->
+    <div id="posterSheet" class="poster-frame">
+      <div class="poster-banner">
+        <div id="viewWeekDay" class="banner-top-tag">WEEK 01 • DAY 22/11/2026</div>
+        <div id="viewOrgName" class="banner-org">NIGHTMARE X OFFICIAL</div>
+        <div class="banner-presents">PRESENTS</div>
+        <div id="viewBannerMain" class="banner-main-title">NIGHTMARE X SCRIMS</div>
+        <div id="viewStageBar" class="banner-stage-bar">★ 3-MATCH OVERALL STANDINGS ★</div>
       </div>
-      <div class="quick-row">
-        <div class="form-group" style="margin-bottom: 0;">
-          <label for="manualTeamSelect">Select Team / Slot</label>
-          <select id="manualTeamSelect"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-          <label for="manualPlacement">Placement Rank (1–12)</label>
-          <input type="number" id="manualPlacement" min="1" max="20" value="1" />
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-          <label for="manualKills">Kills in Match</label>
-          <input type="number" id="manualKills" min="0" max="60" value="6" />
-        </div>
-        <button id="addMatchResultBtn" class="btn-primary" type="button">
-          + Add Result
-        </button>
-      </div>
-    </section>
 
-    <!-- Exportable Premium Scorecard -->
-    <section class="export-wrapper">
-      <div id="points-table-card" class="scorecard">
-        <div class="sc-header">
-          <div>
-            <div class="sc-org">NIGHTMARE X ESPORTS • OFFICIAL STANDINGS</div>
-            <h2 id="scMainTitle" class="sc-title">NIGHTMARE <span>X</span> INVITATIONAL</h2>
-          </div>
-          <div class="sc-meta">
-            <div id="scStageBadge" class="sc-stage-pill">GRAND FINALS • OVERALL</div>
-            <div id="scRulesInfo" class="sc-submeta">Kill Pts: 1 • Booyah: 12</div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="points-table">
+      <div class="standings-box">
+        <div class="standings-scroll">
+          <table class="standings-table">
             <thead>
               <tr>
-                <th class="num" style="width: 64px;">#</th>
-                <th>Team / Squad</th>
-                <th class="num">Matches</th>
-                <th class="num">Booyahs</th>
-                <th class="num">Place Pts</th>
-                <th class="num">Kill Pts</th>
-                <th class="num">Total Pts</th>
+                <th style="width: 44px;">RANK</th>
+                <th style="width: 46px;">LOGO</th>
+                <th class="left">TEAM NAME</th>
+                <th style="width: 38px;">CD</th>
+                <th style="width: 38px;">MP</th>
+                <th style="width: 42px;">PP</th>
+                <th style="width: 42px;">FP</th>
+                <th style="width: 46px;">TP</th>
               </tr>
             </thead>
-            <tbody id="pointsTableBody"></tbody>
+            <tbody id="standingsBody"></tbody>
           </table>
         </div>
-
-        <div class="sc-footer">
-          <div>GENERATED BY <strong>NIGHTMARE X</strong> POINTS ENGINE</div>
-          <div id="scTimestamp">UPDATED LIVE</div>
-        </div>
       </div>
-    </section>
+
+      <div id="viewFooter" class="poster-footer">
+        ✦ NIGHTMARE X OFFICIAL • WEEK 01 • DAY 22/11/2026 ✦
+      </div>
+    </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "nightmare_x_points_table_v2";
+    const STORAGE_KEY = "nx_scrims_poster_v3";
+    const placementPtsMap = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
 
-    const defaultTeams = [
-      { slot: 1, name: "NIGHTMARE X", igl: "Tanvir", matches: 0, booyahs: 0, placePts: 0, killPts: 0 },
-      { slot: 2, name: "JOZ ARMY", igl: "IGL-02", matches: 0, booyahs: 0, placePts: 0, killPts: 0 },
-      { slot: 3, name: "PHANTOM SQUAD", igl: "IGL-03", matches: 0, booyahs: 0, placePts: 0, killPts: 0 },
-      { slot: 4, name: "APEX PREDATORS", igl: "IGL-04", matches: 0, booyahs: 0, placePts: 0, killPts: 0 },
-      { slot: 5, name: "SHADOW REAPERS", igl: "IGL-05", matches: 0, booyahs: 0, placePts: 0, killPts: 0 },
-      { slot: 6, name: "CRIMSON VIPERS", igl: "IGL-06", matches: 0, booyahs: 0, placePts: 0, killPts: 0 }
+    const initialTeams = [
+      { slot: 1, logo: "NX", name: "NIGHTMAREX", igl: "NX JIHAD", cd: 1, mp: 3, pp: 29, fp: 14 },
+      { slot: 2, logo: "TS", name: "TEAM SLOT 2", igl: "JIHAD", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 3, logo: "BP", name: "BLACK PANTHER", igl: "BP HUNTAR", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 4, logo: "DA", name: "DANGAR", igl: "DANGER 1x", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 5, logo: "NX", name: "NIGHTMARE X", igl: "NX JIHAD", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 6, logo: "EH", name: "ELITE HAVOC", igl: "EH.MIKAGE", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 7, logo: "MF", name: "MAX FREM", igl: "MF RAJI", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 8, logo: "SX", name: "SAVAGE X", igl: "ZYN TAMIM", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 9, logo: "TS", name: "TEAM SLOT 9", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 10, logo: "TS", name: "TEAM SLOT 10", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 11, logo: "TS", name: "TEAM SLOT 11", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
+      { slot: 12, logo: "TS", name: "TEAM SLOT 12", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 }
     ];
 
-    let state = {
-      tournamentTitle: "NIGHTMARE X INVITATIONAL",
-      stageLabel: "GRAND FINALS • OVERALL",
-      killPointValue: 1,
-      placementTable: [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0],
-      geminiApiKey: "",
-      teams: structuredClone(defaultTeams)
+    let data = {
+      weekDay: "WEEK 01 • DAY 22/11/2026",
+      orgName: "NIGHTMARE X OFFICIAL",
+      bannerMain: "NIGHTMARE X SCRIMS",
+      stageBar: "★ 3-MATCH OVERALL STANDINGS ★",
+      teams: structuredClone(initialTeams)
     };
 
-    function loadState() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          state = {
-            ...state,
-            ...parsed,
-            teams: Array.isArray(parsed.teams) && parsed.teams.length ? parsed.teams : structuredClone(defaultTeams)
-          };
-        }
-      } catch (e) {
-        console.error("Failed to load saved state:", e);
+    function pad2(n) {
+      return String(Math.max(0, Number(n) || 0)).padStart(2, "0");
+    }
+
+    function makeLogoCode(name) {
+      const words = String(name || "NX").trim().split(/\s+/);
+      if (words.length >= 2) {
+        return (words[0][0] + words[1][0]).toUpperCase();
       }
-
-      document.getElementById("tournamentTitle").value = state.tournamentTitle;
-      document.getElementById("stageLabel").value = state.stageLabel;
-      document.getElementById("killPointValue").value = state.killPointValue;
-      document.getElementById("placementTable").value = state.placementTable.join(", ");
-      document.getElementById("geminiApiKey").value = state.geminiApiKey || "";
+      return String(name || "NX").slice(0, 2).toUpperCase();
     }
 
-    function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {
-        console.error("Failed to save state:", e);
-      }
-    }
-
-    function parsePlacementTable(str) {
-      return str
-        .split(",")
-        .map(v => parseInt(v.trim(), 10))
-        .filter(v => !Number.isNaN(v));
-    }
-
-    function getPlacementPoints(rank) {
-      const table = state.placementTable;
-      if (rank >= 1 && rank <= table.length) {
-        return table[rank - 1];
-      }
-      return 0;
-    }
-
-    function formatHeadlineTitle(raw) {
-      const clean = (raw || "NIGHTMARE X TOURNAMENT").trim();
-      const words = clean.split(/\s+/);
-      if (words.length <= 1) return `<span>${escapeHtml(clean)}</span>`;
-      const last = words.pop();
-      return `${escapeHtml(words.join(" "))} <span>${escapeHtml(last)}</span>`;
-    }
-
-    function escapeHtml(str) {
-      return String(str)
+    function escapeHtml(s) {
+      return String(s || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
     }
 
-    function renderSlotEditor() {
-      const container = document.getElementById("slotListEditor");
-      const select = document.getElementById("manualTeamSelect");
-      container.innerHTML = "";
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          data = { ...data, ...parsed, teams: parsed.teams || structuredClone(initialTeams) };
+        }
+      } catch (e) {}
+
+      document.getElementById("weekDayInput").value = data.weekDay;
+      document.getElementById("orgNameInput").value = data.orgName;
+      document.getElementById("bannerMainInput").value = data.bannerMain;
+      document.getElementById("stageBarInput").value = data.stageBar;
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function renderSlotsEditor() {
+      const wrap = document.getElementById("slotsEditor");
+      const select = document.getElementById("teamSelect");
+      wrap.innerHTML = "";
       select.innerHTML = "";
 
-      state.teams.forEach((team, idx) => {
-        team.slot = idx + 1;
-
-        const row = document.createElement("div");
-        row.className = "slot-item";
-        row.innerHTML = `
-          <div class="slot-badge">#${team.slot}</div>
-          <input type="text" value="${escapeHtml(team.name)}" placeholder="Team Name" data-idx="${idx}" data-field="name" />
-          <input type="text" value="${escapeHtml(team.igl || "")}" placeholder="IGL / IGN" data-idx="${idx}" data-field="igl" />
-          <button type="button" class="icon-btn" data-remove="${idx}" title="Remove Slot">✕</button>
+      data.teams.forEach((t, idx) => {
+        const chip = document.createElement("div");
+        chip.className = "slot-chip";
+        chip.innerHTML = `
+          <span>#${pad2(idx + 1)}</span>
+          <input type="text" value="${escapeHtml(t.name)}" placeholder="Team Name" data-idx="${idx}" data-k="name" />
+          <input type="text" value="${escapeHtml(t.igl)}" placeholder="IGL Name" data-idx="${idx}" data-k="igl" />
         `;
-        container.appendChild(row);
+        wrap.appendChild(chip);
 
         const opt = document.createElement("option");
         opt.value = idx;
-        opt.textContent = `Slot #${team.slot} — ${team.name}`;
+        opt.textContent = `#${pad2(idx + 1)} - ${t.name}`;
         select.appendChild(opt);
       });
 
-      container.querySelectorAll("input").forEach(inp => {
+      wrap.querySelectorAll("input").forEach(inp => {
         inp.addEventListener("input", (e) => {
           const i = Number(e.target.dataset.idx);
-          const field = e.target.dataset.field;
-          state.teams[i][field] = e.target.value;
-          saveState();
-          renderScorecard();
-          updateManualSelectLabels();
-        });
-      });
-
-      container.querySelectorAll("button[data-remove]").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const i = Number(e.target.dataset.remove);
-          if (state.teams.length <= 1) return;
-          state.teams.splice(i, 1);
-          saveState();
-          renderSlotEditor();
-          renderScorecard();
+          const k = e.target.dataset.k;
+          data.teams[i][k] = e.target.value;
+          if (k === "name") {
+            data.teams[i].logo = makeLogoCode(e.target.value);
+            select.options[i].textContent = `#${pad2(i + 1)} - ${e.target.value}`;
+          }
+          saveData();
+          renderTable();
         });
       });
     }
 
-    function updateManualSelectLabels() {
-      const select = document.getElementById("manualTeamSelect");
-      Array.from(select.options).forEach((opt, i) => {
-        if (state.teams[i]) {
-          opt.textContent = `Slot #${state.teams[i].slot} — ${state.teams[i].name}`;
-        }
-      });
-    }
+    function renderTable() {
+      document.getElementById("viewWeekDay").textContent = data.weekDay;
+      document.getElementById("viewOrgName").textContent = data.orgName;
+      document.getElementById("viewBannerMain").textContent = data.bannerMain;
+      document.getElementById("viewStageBar").textContent = data.stageBar;
+      document.getElementById("viewFooter").textContent = `✦ ${data.orgName} • ${data.weekDay} ✦`;
 
-    function renderScorecard() {
-      document.getElementById("scMainTitle").innerHTML = formatHeadlineTitle(state.tournamentTitle);
-      document.getElementById("scStageBadge").textContent = state.stageLabel || "STANDINGS";
-
-      const booyahPts = getPlacementPoints(1);
-      document.getElementById("scRulesInfo").textContent =
-        `Kill Pts: ${state.killPointValue} • Booyah: ${booyahPts}`;
-
-      const ranked = state.teams
-        .map((t, originalIndex) => {
-          const totalPts = (Number(t.placePts) || 0) + (Number(t.killPts) || 0);
-          return { ...t, originalIndex, totalPts };
+      const sorted = data.teams
+        .map((t, idx) => {
+          const tp = (Number(t.pp) || 0) + (Number(t.fp) || 0);
+          return { ...t, idx, tp };
         })
         .sort((a, b) => {
-          if (b.totalPts !== a.totalPts) return b.totalPts - a.totalPts;
-          if (b.booyahs !== a.booyahs) return b.booyahs - a.booyahs;
-          if (b.killPts !== a.killPts) return b.killPts - a.killPts;
+          if (b.tp !== a.tp) return b.tp - a.tp;
+          if (b.cd !== a.cd) return b.cd - a.cd;
+          if (b.fp !== a.fp) return b.fp - a.fp;
           return a.slot - b.slot;
         });
 
-      const tbody = document.getElementById("pointsTableBody");
+      const tbody = document.getElementById("standingsBody");
       tbody.innerHTML = "";
 
-      ranked.forEach((team, index) => {
-        const rank = index + 1;
-        const rankClass = rank <= 3 ? `rank-${rank}` : "";
+      sorted.forEach((team, i) => {
         const tr = document.createElement("tr");
-        tr.className = rankClass;
-
+        if (i === 0) tr.className = "top-one";
         tr.innerHTML = `
-          <td class="num"><span class="rank-badge">${rank}</span></td>
-          <td>
-            <div class="team-name-cell">${escapeHtml(team.name)}</div>
-            ${team.igl ? `<span class="igl-sub">IGL: ${escapeHtml(team.igl)} • Slot #${team.slot}</span>` : `<span class="igl-sub">Slot #${team.slot}</span>`}
+          <td>${pad2(i + 1)}</td>
+          <td><span class="logo-pill">${escapeHtml(team.logo || makeLogoCode(team.name))}</span></td>
+          <td class="left">
+            <span class="team-title">${escapeHtml(team.name)}</span>
+            ${team.igl ? `<span class="igl-line">IGL: ${escapeHtml(team.igl)}</span>` : ""}
           </td>
-          <td class="num">${team.matches || 0}</td>
-          <td class="num">${team.booyahs || 0}</td>
-          <td class="num">${team.placePts || 0}</td>
-          <td class="num">${team.killPts || 0}</td>
-          <td class="num"><span class="total-pts">${team.totalPts}</span></td>
+          <td>${pad2(team.cd)}</td>
+          <td>${pad2(team.mp)}</td>
+          <td>${pad2(team.pp)}</td>
+          <td>${pad2(team.fp)}</td>
+          <td>${pad2(team.tp)}</td>
         `;
         tbody.appendChild(tr);
       });
-
-      const now = new Date();
-      document.getElementById("scTimestamp").textContent =
-        `UPDATED: ${now.toLocaleDateString("en-GB")} • ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     }
 
-    function applyMatchResult(teamIndex, placement, kills) {
-      const team = state.teams[teamIndex];
-      if (!team) return;
-
-      const rank = Math.max(1, Number(placement) || 1);
-      const killCount = Math.max(0, Number(kills) || 0);
-      const earnedPlacePts = getPlacementPoints(rank);
-      const earnedKillPts = killCount * (Number(state.killPointValue) || 1);
-
-      team.matches = (Number(team.matches) || 0) + 1;
-      if (rank === 1) {
-        team.booyahs = (Number(team.booyahs) || 0) + 1;
-      }
-      team.placePts = (Number(team.placePts) || 0) + earnedPlacePts;
-      team.killPts = (Number(team.killPts) || 0) + earnedKillPts;
-
-      saveState();
-      renderScorecard();
-    }
-
-    function setStatus(message, type = "") {
-      const box = document.getElementById("scanStatus");
-      box.textContent = message;
-      box.className = `status-msg show ${type}`;
-    }
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = String(reader.result || "");
-          const base64 = result.split(",")[1];
-          resolve({ base64, mimeType: file.type || "image/png" });
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function scanScreenshotWithGemini() {
-      const apiKey = document.getElementById("geminiApiKey").value.trim();
-      const fileInput = document.getElementById("screenshotInput");
-      const file = fileInput.files && fileInput.files[0];
-
-      if (!apiKey) {
-        setStatus("আগে Gemini API Key বসাও।", "error");
-        return;
-      }
-      if (!file) {
-        setStatus("স্ক্রিনশট ছবি সিলেক্ট করো।", "error");
-        return;
-      }
-
-      state.geminiApiKey = apiKey;
-      saveState();
-
-      const btn = document.getElementById("scanScreenshotBtn");
-      btn.disabled = true;
-      setStatus("স্ক্রিনশট স্ক্যান করা হচ্ছে...", "");
-
-      try {
-        const { base64, mimeType } = await fileToBase64(file);
-        const rosterSummary = state.teams.map(t => ({
-          slot: t.slot,
-          teamName: t.name,
-          igl: t.igl || ""
-        }));
-
-        const prompt = `
-You are a Free Fire esports match result parser.
-Analyze this match screenshot and match found teams or player IGNs/IGLs against this registered roster:
-${JSON.stringify(rosterSummary)}
-
-Return ONLY valid JSON array with objects:
-[{"slot": 1, "placement": 1, "kills": 8}]
-Rules:
-- "slot" must match a slot number from the roster if recognized.
-- "placement" is rank (1 = Booyah/1st, 2 = 2nd, etc.).
-- "kills" is total kills for that team/squad in this screenshot.
-- Do not include markdown fences or extra text.
-        `.trim();
-
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [
-                {
-                  parts: [
-                    { text: prompt },
-                    { inlineData: { mimeType, data: base64 } }
-                  ]
-                }
-              ]
-            })
-          }
-        );
-
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error?.message || "Gemini API error");
-        }
-
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const cleaned = rawText.replace(/```json|```/gi, "").trim();
-        const results = JSON.parse(cleaned);
-
-        if (!Array.isArray(results) || results.length === 0) {
-          throw new Error("স্ক্রিনশট থেকে কোনো ম্যাচ রেজাল্ট শনাক্ত করা যায়নি।");
-        }
-
-        let updatedCount = 0;
-        results.forEach(item => {
-          const teamIdx = state.teams.findIndex(t => Number(t.slot) === Number(item.slot));
-          if (teamIdx !== -1) {
-            applyMatchResult(teamIdx, item.placement || 1, item.kills || 0);
-            updatedCount++;
-          }
-        });
-
-        setStatus(`সফলভাবে ${updatedCount}টি টিমের পয়েন্ট আপডেট হয়েছে!`, "success");
-      } catch (err) {
-        setStatus(`সমস্যা হয়েছে: ${err.message}`, "error");
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    async function downloadPremiumImage() {
-      const card = document.getElementById("points-table-card");
-      const btn = document.getElementById("downloadImgBtn");
-      const originalText = btn.innerHTML;
+    // Direct Image Download (No Print/PDF Dialog)
+    async function downloadPosterDirectlyAsPic() {
+      const target = document.getElementById("posterSheet");
+      const btn = document.getElementById("directDownloadPicBtn");
+      const oldLabel = btn.innerHTML;
 
       btn.disabled = true;
-      btn.innerHTML = "⏳ Generating HD...";
+      btn.innerHTML = "⏳ Saving PNG...";
 
       try {
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
         }
 
-        const canvas = await html2canvas(card, {
+        const canvas = await html2canvas(target, {
           scale: 3,
           useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#0a0b0f",
+          backgroundColor: "#ffffff",
           logging: false
         });
 
-        const dataUrl = canvas.toDataURL("image/png", 1.0);
-        const safeSlug = (state.tournamentTitle || "NightmareX-PointsTable")
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "");
-
-        const link = document.createElement("a");
-        link.download = `${safeSlug || "nightmare-x-scorecard"}-HD.png`;
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const pngUrl = canvas.toDataURL("image/png", 1.0);
+        const a = document.createElement("a");
+        a.href = pngUrl;
+        a.download = "NightmareX-Standings-Poster.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       } catch (err) {
-        alert("ছবি ডাউনলোড করতে সমস্যা হয়েছে: " + err.message);
+        alert("ছবি ডাউনলোডে সমস্যা হয়েছে: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = originalText;
+        btn.innerHTML = oldLabel;
       }
     }
 
-    // Event Listeners
-    document.getElementById("tournamentTitle").addEventListener("input", (e) => {
-      state.tournamentTitle = e.target.value;
-      saveState();
-      renderScorecard();
-    });
-
-    document.getElementById("stageLabel").addEventListener("input", (e) => {
-      state.stageLabel = e.target.value;
-      saveState();
-      renderScorecard();
-    });
-
-    document.getElementById("killPointValue").addEventListener("input", (e) => {
-      state.killPointValue = Math.max(0, parseInt(e.target.value, 10) || 0);
-      saveState();
-      renderScorecard();
-    });
-
-    document.getElementById("placementTable").addEventListener("input", (e) => {
-      const parsed = parsePlacementTable(e.target.value);
-      if (parsed.length) {
-        state.placementTable = parsed;
-        saveState();
-        renderScorecard();
-      }
-    });
-
-    document.getElementById("addSlotBtn").addEventListener("click", () => {
-      const nextSlot = state.teams.length + 1;
-      state.teams.push({
-        slot: nextSlot,
-        name: `TEAM ${nextSlot}`,
-        igl: "",
-        matches: 0,
-        booyahs: 0,
-        placePts: 0,
-        killPts: 0
+    // Bindings
+    ["weekDayInput", "orgNameInput", "bannerMainInput", "stageBarInput"].forEach((id, idx) => {
+      const keys = ["weekDay", "orgName", "bannerMain", "stageBar"];
+      document.getElementById(id).addEventListener("input", (e) => {
+        data[keys[idx]] = e.target.value;
+        saveData();
+        renderTable();
       });
-      saveState();
-      renderSlotEditor();
-      renderScorecard();
     });
 
-    document.getElementById("addMatchResultBtn").addEventListener("click", () => {
-      const teamIdx = Number(document.getElementById("manualTeamSelect").value);
-      const placement = Number(document.getElementById("manualPlacement").value);
-      const kills = Number(document.getElementById("manualKills").value);
-      applyMatchResult(teamIdx, placement, kills);
+    document.getElementById("addMatchBtn").addEventListener("click", () => {
+      const teamIdx = Number(document.getElementById("teamSelect").value);
+      const rank = Math.min(12, Math.max(1, Number(document.getElementById("rankInput").value) || 1));
+      const kills = Math.max(0, Number(document.getElementById("killsInput").value) || 0);
+      const earnedPP = placementPtsMap[rank - 1] ?? 0;
+
+      const t = data.teams[teamIdx];
+      t.mp = (Number(t.mp) || 0) + 1;
+      if (rank === 1) t.cd = (Number(t.cd) || 0) + 1;
+      t.pp = (Number(t.pp) || 0) + earnedPP;
+      t.fp = (Number(t.fp) || 0) + kills;
+
+      saveData();
+      renderTable();
     });
 
     document.getElementById("resetScoresBtn").addEventListener("click", () => {
-      if (!confirm("সব টিমের ম্যাচ, বুইয়া এবং পয়েন্ট জিরো করতে চাও?")) return;
-      state.teams.forEach(t => {
-        t.matches = 0;
-        t.booyahs = 0;
-        t.placePts = 0;
-        t.killPts = 0;
+      if (!confirm("সব টিমের CD, MP, PP, FP জিরো করতে চাও?")) return;
+      data.teams.forEach(t => {
+        t.cd = 0;
+        t.mp = 0;
+        t.pp = 0;
+        t.fp = 0;
       });
-      saveState();
-      renderScorecard();
+      saveData();
+      renderTable();
     });
 
-    document.getElementById("scanScreenshotBtn").addEventListener("click", scanScreenshotWithGemini);
-    document.getElementById("downloadImgBtn").addEventListener("click", downloadPremiumImage);
+    document.getElementById("copyWhatsappBtn").addEventListener("click", () => {
+      const ranked = data.teams
+        .map(t => ({ ...t, tp: (Number(t.pp) || 0) + (Number(t.fp) || 0) }))
+        .sort((a, b) => b.tp - a.tp);
 
-    // Init
-    loadState();
-    renderSlotEditor();
-    renderScorecard();
+      const lines = [
+        `🏆 *${data.bannerMain}*`,
+        `📅 ${data.weekDay}`,
+        `📊 ${data.stageBar}`,
+        ""
+      ];
+      ranked.forEach((t, i) => {
+        lines.push(`#${pad2(i + 1)} *${t.name}* — ${t.tp} PTS (PP: ${t.pp} | FP: ${t.fp} | CD: ${t.cd})`);
+      });
+
+      navigator.clipboard?.writeText(lines.join("\n"));
+      alert("WhatsApp standings text কপি হয়েছে!");
+    });
+
+    document.getElementById("directDownloadPicBtn").addEventListener("click", downloadPosterDirectlyAsPic);
+
+    loadData();
+    renderSlotsEditor();
+    renderTable();
   </script>
 </body>
 </html>
