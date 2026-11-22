@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nightmare X Scrims | Standings &amp; Poster Generator</title>
+  <title>Nightmare X Scrims • Standings &amp; 3-Match Scores</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
-      --bg-page: #090b10;
-      --bg-panel: #121622;
-      --bg-card: #181d2c;
-      --green-dark: #0f6b2f;
-      --green-mid: #169440;
-      --green-bright: #22c55e;
-      --gold: #facc15;
-      --red-accent: #ef4444;
-      --text-light: #f8fafc;
-      --text-dim: #94a3b8;
-      --border-soft: rgba(255, 255, 255, 0.09);
+      --bg-page: #dff2e3;
+      --card-bg: #ffffff;
+      --green-deep: #14532d;
+      --green-mid: #16803c;
+      --green-bright: #1ea84f;
+      --row-bg: #e7f6cf;
+      --row-top: #fef08a;
+      --gold: #f59e0b;
+      --blue-btn: #0284c7;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
     }
 
     * {
@@ -32,91 +32,48 @@
     body {
       font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
       background: var(--bg-page);
-      color: var(--text-light);
-      padding: 16px 12px 60px;
+      color: var(--text-dark);
+      padding: 14px 10px 50px;
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 960px;
+    .wrap {
+      max-width: 760px;
       margin: 0 auto;
     }
 
-    .section-card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 16px;
+    .box {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 24px rgba(20, 83, 45, 0.12);
+      border: 1px solid rgba(20, 83, 45, 0.14);
     }
 
-    .section-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-light);
-      margin-bottom: 12px;
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: 1.5fr 0.8fr 0.8fr auto;
-      gap: 10px;
-      align-items: end;
-    }
-
-    label {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-bottom: 4px;
-    }
-
-    input, select {
-      width: 100%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
-      color: var(--text-light);
-      padding: 9px 11px;
-      border-radius: 8px;
-      font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
-      font-size: 0.88rem;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--green-bright);
-    }
-
-    .btn-row {
-      display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-heading {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--green-deep);
     }
 
     button {
       font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
       font-weight: 700;
-      font-size: 0.86rem;
       border: none;
-      border-radius: 9px;
-      padding: 10px 15px;
+      border-radius: 10px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
       transition: transform 0.14s ease, opacity 0.2s ease;
     }
 
@@ -124,43 +81,47 @@
       transform: scale(0.97);
     }
 
-    .btn-green {
-      background: linear-gradient(135deg, #16a34a, #0f6b2f);
+    .btn-paste {
+      background: var(--green-mid);
       color: #fff;
+      padding: 8px 13px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .btn-gold {
-      background: linear-gradient(135deg, #facc15, #eab308);
-      color: #0b0d12;
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
-    .btn-dark {
-      background: var(--bg-card);
-      color: var(--text-light);
-      border: 1px solid var(--border-soft);
+    .tab-btn {
+      background: #ecfdf5;
+      color: var(--green-deep);
+      border: 1px solid #86efac;
+      padding: 8px 4px;
+      font-size: 0.78rem;
+      border-radius: 9px;
     }
 
-    /* =======================================================
-       POSTER / STANDINGS SHEET (DIRECT PIC DOWNLOAD TARGET)
-       ======================================================= */
-    .poster-frame {
-      background: #ffffff;
-      color: #0f172a;
-      border-radius: 18px;
-      padding: 18px 16px 14px;
-      border: 3px solid #14532d;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    .tab-btn.active {
+      background: var(--green-mid);
+      color: #ffffff;
+      border-color: var(--green-deep);
     }
 
-    /* Updated High-Impact Esports Banner */
+    /* Updated High-Impact Poster Banner */
     .poster-banner {
       position: relative;
-      background: linear-gradient(135deg, #071b10 0%, #0e3b1f 55%, #071b10 100%);
-      border: 2px solid #16a34a;
+      background: linear-gradient(135deg, #062111 0%, #14532d 55%, #062111 100%);
+      border: 2px solid #22c55e;
       border-radius: 14px;
-      padding: 16px 14px 14px;
+      padding: 14px 12px 12px;
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       overflow: hidden;
     }
 
@@ -174,348 +135,365 @@
       background: linear-gradient(90deg, #22c55e, #facc15, #22c55e);
     }
 
-    .banner-top-tag {
+    .banner-date {
       display: inline-block;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.8px;
       color: #fde047;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(250, 204, 21, 0.35);
-      padding: 3px 12px;
+      padding: 2px 10px;
       border-radius: 99px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
+      margin-bottom: 4px;
     }
 
     .banner-org {
-      font-size: clamp(1rem, 3vw, 1.35rem);
+      font-size: clamp(0.95rem, 2.8vw, 1.25rem);
       font-weight: 700;
-      letter-spacing: 1.5px;
       color: #ffffff;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       line-height: 1.15;
     }
 
     .banner-presents {
-      font-size: 0.68rem;
-      letter-spacing: 3px;
+      font-size: 0.62rem;
+      letter-spacing: 2.5px;
       color: #86efac;
-      text-transform: uppercase;
-      margin: 2px 0;
       font-weight: 700;
+      margin: 2px 0;
     }
 
-    .banner-main-title {
-      font-size: clamp(1.45rem, 4.5vw, 2.2rem);
+    .banner-main {
+      font-size: clamp(1.3rem, 4vw, 1.95rem);
       font-weight: 700;
       font-style: italic;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
       background: linear-gradient(180deg, #ffffff 15%, #fde047 65%, #f59e0b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1.1;
-      margin: 2px 0 8px;
+      margin: 2px 0 6px;
     }
 
-    .banner-stage-bar {
+    .banner-stage {
       display: inline-block;
       background: linear-gradient(90deg, #15803d, #22c55e, #15803d);
-      color: #ffffff;
-      font-size: 0.78rem;
+      color: #fff;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      padding: 5px 18px;
-      border-radius: 7px;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+      letter-spacing: 1.2px;
+      padding: 4px 14px;
+      border-radius: 6px;
     }
 
-    /* Standings Box inside Poster */
-    .standings-box {
-      background: #14532d;
+    /* Exportable Table Card */
+    .export-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .board {
+      background: var(--green-deep);
       border-radius: 12px;
-      padding: 8px 8px 10px;
-    }
-
-    .standings-scroll {
-      width: 100%;
+      padding: 7px 7px 9px;
       overflow-x: auto;
     }
 
-    table.standings-table {
+    table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0 5px;
-      min-width: 540px;
+      min-width: 480px;
     }
 
-    table.standings-table thead th {
+    thead th {
       color: #dcfce7;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       text-transform: uppercase;
-      padding: 5px 7px;
+      padding: 4px 6px;
       text-align: center;
     }
 
-    table.standings-table thead th.left {
+    thead th.left {
       text-align: left;
     }
 
-    table.standings-table tbody tr {
-      background: #e6f6cf;
-      color: #0f172a;
+    tbody tr {
+      background: var(--row-bg);
     }
 
-    table.standings-table tbody tr.top-one {
-      background: linear-gradient(90deg, #fef08a, #dcfce7 65%, #e6f6cf);
+    tbody tr.rank1 {
+      background: linear-gradient(90deg, var(--row-top), #dcfce7 60%, var(--row-bg));
     }
 
-    table.standings-table tbody td {
-      padding: 6px 7px;
-      font-size: 0.82rem;
+    tbody td {
+      padding: 6px 6px;
+      font-size: 0.8rem;
       font-weight: 700;
       text-align: center;
       vertical-align: middle;
+      color: var(--text-dark);
     }
 
-    table.standings-table tbody td.left {
+    tbody td.left {
       text-align: left;
     }
 
-    table.standings-table tbody td:first-child {
+    tbody td:first-child {
       border-top-left-radius: 7px;
       border-bottom-left-radius: 7px;
-      color: #15803d;
+      color: var(--green-deep);
     }
 
-    table.standings-table tbody td:last-child {
+    tbody td:last-child {
       border-top-right-radius: 7px;
       border-bottom-right-radius: 7px;
-      background: rgba(21, 128, 61, 0.14);
-      color: #0f172a;
-      font-size: 0.88rem;
+      background: rgba(20, 83, 45, 0.14);
+      font-size: 0.86rem;
     }
 
-    .logo-pill {
+    .logo-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 26px;
-      height: 22px;
+      width: 25px;
+      height: 21px;
       border-radius: 5px;
-      background: #0f5132;
-      color: #ffffff;
-      font-size: 0.68rem;
+      background: #0f4c2a;
+      color: #fff;
+      font-size: 0.66rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
-    .team-title {
+    .t-name {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: #0f172a;
       line-height: 1.1;
       text-transform: uppercase;
     }
 
-    .igl-line {
+    .t-igl {
       display: block;
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       font-weight: 600;
       color: #334155;
-      line-height: 1.15;
       margin-top: 1px;
     }
 
-    .poster-footer {
+    .mini-input {
+      width: 44px;
+      padding: 3px 4px;
       text-align: center;
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 700;
-      letter-spacing: 1.2px;
-      color: #14532d;
-      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #86efac;
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .footer-line {
+      margin-top: 9px;
+      padding: 0 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--green-deep);
       text-transform: uppercase;
     }
 
-    .slots-list {
-      max-height: 190px;
-      overflow-y: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .slot-chip {
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 7px 9px;
-      display: grid;
-      grid-template-columns: 32px 1fr 1fr;
-      gap: 6px;
+    /* Section 3 Sharing & Direct Pic Download */
+    .btn-download-pic {
+      width: 100%;
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #0f172a;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+      display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(234, 179, 8, 0.28);
     }
 
-    .slot-chip span {
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: #4ade80;
-      text-align: center;
+    .bottom-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .slot-chip input {
-      padding: 5px 7px;
+    .btn-wa {
+      background: var(--blue-btn);
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+
+    .btn-reset {
+      background: #dcfce7;
+      color: var(--green-deep);
+      border: 1px solid #86efac;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+
+    /* Slot List Editor */
+    .slot-editor {
+      display: none;
+      margin-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 10px;
+    }
+
+    .slot-editor.show {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 95px;
+      border-radius: 9px;
+      border: 1px solid #94a3b8;
+      padding: 8px 10px;
+      font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+
+    .banner-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .banner-edit-grid input {
+      padding: 7px 9px;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      font-family: 'Chakra Petch', 'Hind Siliguri', sans-serif;
       font-size: 0.78rem;
     }
 
-    @media (max-width: 640px) {
-      .grid-4 {
-        grid-template-columns: 1fr 1fr;
+    @media (max-width: 520px) {
+      .tabs {
+        grid-template-columns: repeat(3, 1fr);
       }
-      .grid-4 button {
-        grid-column: span 2;
+      .banner-edit-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Banner & Match Config -->
-    <div class="section-card">
-      <div class="section-title">
-        <span>Banner &amp; Match Settings</span>
-        <button id="directDownloadPicBtn" class="btn-gold" type="button">
-          📥 Download Poster Pic (PNG)
-        </button>
-      </div>
-      <div class="grid-2">
-        <div>
-          <label for="weekDayInput">Week &amp; Date Line</label>
-          <input type="text" id="weekDayInput" value="WEEK 01 • DAY 22/11/2026" />
-        </div>
-        <div>
-          <label for="orgNameInput">Organization Name</label>
-          <input type="text" id="orgNameInput" value="NIGHTMARE X OFFICIAL" />
-        </div>
-        <div>
-          <label for="bannerMainInput">Main Banner Title</label>
-          <input type="text" id="bannerMainInput" value="NIGHTMARE X SCRIMS" />
-        </div>
-        <div>
-          <label for="stageBarInput">Standings Subtitle Bar</label>
-          <input type="text" id="stageBarInput" value="★ 3-MATCH OVERALL STANDINGS ★" />
-        </div>
-      </div>
-      <div class="btn-row">
-        <button id="copyWhatsappBtn" class="btn-green" type="button">📋 Copy WhatsApp Text</button>
-        <button id="resetScoresBtn" class="btn-dark" type="button">🔄 Reset Scores</button>
-      </div>
-    </div>
-
-    <!-- Quick Match Point Entry -->
-    <div class="section-card">
-      <div class="section-title">Add Match Result (CD / MP / PP / FP)</div>
-      <div class="grid-4">
-        <div>
-          <label for="teamSelect">Team / Slot</label>
-          <select id="teamSelect"></select>
-        </div>
-        <div>
-          <label for="rankInput">Rank (1–12)</label>
-          <input type="number" id="rankInput" min="1" max="12" value="1" />
-        </div>
-        <div>
-          <label for="killsInput">Kills (FP)</label>
-          <input type="number" id="killsInput" min="0" max="50" value="5" />
-        </div>
-        <button id="addMatchBtn" class="btn-green" type="button">+ Add Match</button>
+  <div class="wrap">
+    <!-- Section 2: Standings & 3-Match Scores -->
+    <div class="box">
+      <div class="top-bar">
+        <div class="section-heading">2. STANDINGS &amp; 3-MATCH SCORES</div>
+        <button id="toggleSlotEditorBtn" class="btn-paste" type="button">📋 Paste Slot List</button>
       </div>
 
-      <div id="slotsEditor" class="slots-list"></div>
-    </div>
-
-    <!-- Poster Sheet Preview (Direct PNG Export) -->
-    <div id="posterSheet" class="poster-frame">
-      <div class="poster-banner">
-        <div id="viewWeekDay" class="banner-top-tag">WEEK 01 • DAY 22/11/2026</div>
-        <div id="viewOrgName" class="banner-org">NIGHTMARE X OFFICIAL</div>
-        <div class="banner-presents">PRESENTS</div>
-        <div id="viewBannerMain" class="banner-main-title">NIGHTMARE X SCRIMS</div>
-        <div id="viewStageBar" class="banner-stage-bar">★ 3-MATCH OVERALL STANDINGS ★</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="overall" type="button">Overall</button>
+        <button class="tab-btn" data-tab="m1" type="button">Match 1</button>
+        <button class="tab-btn" data-tab="m2" type="button">Match 2</button>
+        <button class="tab-btn" data-tab="m3" type="button">Match 3</button>
+        <button class="tab-btn" data-tab="slots" type="button">Slot List</button>
       </div>
 
-      <div class="standings-box">
-        <div class="standings-scroll">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th style="width: 44px;">RANK</th>
-                <th style="width: 46px;">LOGO</th>
-                <th class="left">TEAM NAME</th>
-                <th style="width: 38px;">CD</th>
-                <th style="width: 38px;">MP</th>
-                <th style="width: 42px;">PP</th>
-                <th style="width: 42px;">FP</th>
-                <th style="width: 46px;">TP</th>
-              </tr>
-            </thead>
-            <tbody id="standingsBody"></tbody>
+      <!-- Slot List & Banner Quick Editor -->
+      <div id="slotEditorBox" class="slot-editor">
+        <div class="banner-edit-grid">
+          <input type="text" id="editDate" placeholder="Week / Day (e.g. WEEK 01 • DAY 22/11/2026)" />
+          <input type="text" id="editBannerTitle" placeholder="Banner Title (e.g. NIGHTMARE X SCRIMS)" />
+        </div>
+        <textarea id="pasteSlotTextarea" placeholder="প্রতি লাইনে একটি করে টিম লিখো: Team Name | IGL Name&#10;যেমন:&#10;NIGHTMARE X | NX JIHAD&#10;JOZ ARMY | TANVIR"></textarea>
+        <button id="applySlotListBtn" class="btn-paste" type="button">✔ Apply Slot List</button>
+      </div>
+
+      <!-- Exportable Poster + Table -->
+      <div id="exportCard" class="export-card">
+        <div class="poster-banner">
+          <div id="viewDate" class="banner-date">WEEK 01 • DAY 22/11/2026</div>
+          <div id="viewOrg" class="banner-org">NIGHTMARE X OFFICIAL</div>
+          <div class="banner-presents">PRESENTS</div>
+          <div id="viewBannerTitle" class="banner-main">NIGHTMARE X SCRIMS</div>
+          <div id="viewStage" class="banner-stage">★ 3-MATCH OVERALL STANDINGS ★</div>
+        </div>
+
+        <div class="board">
+          <table>
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
           </table>
         </div>
-      </div>
 
-      <div id="viewFooter" class="poster-footer">
-        ✦ NIGHTMARE X OFFICIAL • WEEK 01 • DAY 22/11/2026 ✦
+        <div class="footer-line">
+          <span id="viewFooterLeft">✦ NIGHTMARE X OFFICIAL</span>
+          <span id="viewFooterRight">WEEK 01 • DAY 22/11/2026 ✦</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Direct Pic Download & Sharing -->
+    <div class="box">
+      <div class="section-heading" style="margin-bottom: 10px;">3. POSTER SHEET &amp; SHARING</div>
+      <button id="downloadPicBtn" class="btn-download-pic" type="button">
+        🖼️ DOWNLOAD STANDINGS PIC (PNG)
+      </button>
+      <div class="bottom-actions">
+        <button id="copyWaBtn" class="btn-wa" type="button">📋 Copy WhatsApp Text</button>
+        <button id="resetBtn" class="btn-reset" type="button">🔄 Reset Scores</button>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "nx_scrims_poster_v3";
-    const placementPtsMap = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
+    const KEY = "nx_3match_points_v4";
+    let currentTab = "overall";
 
-    const initialTeams = [
-      { slot: 1, logo: "NX", name: "NIGHTMAREX", igl: "NX JIHAD", cd: 1, mp: 3, pp: 29, fp: 14 },
-      { slot: 2, logo: "TS", name: "TEAM SLOT 2", igl: "JIHAD", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 3, logo: "BP", name: "BLACK PANTHER", igl: "BP HUNTAR", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 4, logo: "DA", name: "DANGAR", igl: "DANGER 1x", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 5, logo: "NX", name: "NIGHTMARE X", igl: "NX JIHAD", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 6, logo: "EH", name: "ELITE HAVOC", igl: "EH.MIKAGE", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 7, logo: "MF", name: "MAX FREM", igl: "MF RAJI", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 8, logo: "SX", name: "SAVAGE X", igl: "ZYN TAMIM", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 9, logo: "TS", name: "TEAM SLOT 9", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 10, logo: "TS", name: "TEAM SLOT 10", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 11, logo: "TS", name: "TEAM SLOT 11", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 },
-      { slot: 12, logo: "TS", name: "TEAM SLOT 12", igl: "", cd: 0, mp: 0, pp: 0, fp: 0 }
+    const defaultTeams = [
+      { slot: 1, logo: "NI", name: "NIGHTMAREX", igl: "Nx J!HAD", m1: { pp: 12, fp: 6, cd: 1 }, m2: { pp: 9, fp: 5, cd: 0 }, m3: { pp: 8, fp: 3, cd: 0 } },
+      { slot: 2, logo: "TS", name: "TEAM SLOT 2", igl: "J!HAD", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 3, logo: "BP", name: "BLACK PANTHER", igl: "BP HUNTAR", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 4, logo: "DA", name: "DANGAR", igl: "DANGER 1x", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 5, logo: "NX", name: "NIGHTMARE X", igl: "NX J!HAD", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 6, logo: "EH", name: "ELITE HAVOC", igl: "EH.MIKAGE", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 7, logo: "MF", name: "MAX FREM", igl: "MF RAJI", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 8, logo: "SX", name: "SAVAGE X", igl: "ZYN TAMIM", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 9, logo: "TS", name: "TEAM SLOT 9", igl: "", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 10, logo: "TS", name: "TEAM SLOT 10", igl: "", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 11, logo: "TS", name: "TEAM SLOT 11", igl: "", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
+      { slot: 12, logo: "TS", name: "TEAM SLOT 12", igl: "", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } }
     ];
 
-    let data = {
-      weekDay: "WEEK 01 • DAY 22/11/2026",
+    let appState = {
+      dateLine: "WEEK 01 • DAY 22/11/2026",
       orgName: "NIGHTMARE X OFFICIAL",
-      bannerMain: "NIGHTMARE X SCRIMS",
-      stageBar: "★ 3-MATCH OVERALL STANDINGS ★",
-      teams: structuredClone(initialTeams)
+      bannerTitle: "NIGHTMARE X SCRIMS",
+      teams: structuredClone(defaultTeams)
     };
 
     function pad2(n) {
       return String(Math.max(0, Number(n) || 0)).padStart(2, "0");
     }
 
-    function makeLogoCode(name) {
-      const words = String(name || "NX").trim().split(/\s+/);
-      if (words.length >= 2) {
-        return (words[0][0] + words[1][0]).toUpperCase();
-      }
-      return String(name || "NX").slice(0, 2).toUpperCase();
-    }
-
-    function escapeHtml(s) {
+    function esc(s) {
       return String(s || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -523,202 +501,280 @@
         .replace(/"/g, "&quot;");
     }
 
-    function loadData() {
+    function makeLogo(name) {
+      const parts = String(name || "NX").trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return String(name || "NX").slice(0, 2).toUpperCase();
+    }
+
+    function load() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          data = { ...data, ...parsed, teams: parsed.teams || structuredClone(initialTeams) };
+        const raw = localStorage.getItem(KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed, teams: parsed.teams || structuredClone(defaultTeams) };
         }
       } catch (e) {}
-
-      document.getElementById("weekDayInput").value = data.weekDay;
-      document.getElementById("orgNameInput").value = data.orgName;
-      document.getElementById("bannerMainInput").value = data.bannerMain;
-      document.getElementById("stageBarInput").value = data.stageBar;
+      document.getElementById("editDate").value = appState.dateLine;
+      document.getElementById("editBannerTitle").value = appState.bannerTitle;
     }
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(appState));
     }
 
-    function renderSlotsEditor() {
-      const wrap = document.getElementById("slotsEditor");
-      const select = document.getElementById("teamSelect");
-      wrap.innerHTML = "";
-      select.innerHTML = "";
-
-      data.teams.forEach((t, idx) => {
-        const chip = document.createElement("div");
-        chip.className = "slot-chip";
-        chip.innerHTML = `
-          <span>#${pad2(idx + 1)}</span>
-          <input type="text" value="${escapeHtml(t.name)}" placeholder="Team Name" data-idx="${idx}" data-k="name" />
-          <input type="text" value="${escapeHtml(t.igl)}" placeholder="IGL Name" data-idx="${idx}" data-k="igl" />
-        `;
-        wrap.appendChild(chip);
-
-        const opt = document.createElement("option");
-        opt.value = idx;
-        opt.textContent = `#${pad2(idx + 1)} - ${t.name}`;
-        select.appendChild(opt);
+    function computeTeamStats(t) {
+      const matches = [t.m1, t.m2, t.m3];
+      let cd = 0, mp = 0, pp = 0, fp = 0;
+      matches.forEach(m => {
+        const mpp = Number(m.pp) || 0;
+        const mfp = Number(m.fp) || 0;
+        const mcd = Number(m.cd) || 0;
+        if (mpp > 0 || mfp > 0 || mcd > 0) mp += 1;
+        cd += mcd;
+        pp += mpp;
+        fp += mfp;
       });
-
-      wrap.querySelectorAll("input").forEach(inp => {
-        inp.addEventListener("input", (e) => {
-          const i = Number(e.target.dataset.idx);
-          const k = e.target.dataset.k;
-          data.teams[i][k] = e.target.value;
-          if (k === "name") {
-            data.teams[i].logo = makeLogoCode(e.target.value);
-            select.options[i].textContent = `#${pad2(i + 1)} - ${e.target.value}`;
-          }
-          saveData();
-          renderTable();
-        });
-      });
+      return { cd, mp, pp, fp, tp: pp + fp };
     }
 
-    function renderTable() {
-      document.getElementById("viewWeekDay").textContent = data.weekDay;
-      document.getElementById("viewOrgName").textContent = data.orgName;
-      document.getElementById("viewBannerMain").textContent = data.bannerMain;
-      document.getElementById("viewStageBar").textContent = data.stageBar;
-      document.getElementById("viewFooter").textContent = `✦ ${data.orgName} • ${data.weekDay} ✦`;
+    function renderAll() {
+      document.getElementById("viewDate").textContent = appState.dateLine;
+      document.getElementById("viewOrg").textContent = appState.orgName;
+      document.getElementById("viewBannerTitle").textContent = appState.bannerTitle;
+      document.getElementById("viewFooterLeft").textContent = `✦ ${appState.orgName}`;
+      document.getElementById("viewFooterRight").textContent = `${appState.dateLine} ✦`;
 
-      const sorted = data.teams
-        .map((t, idx) => {
-          const tp = (Number(t.pp) || 0) + (Number(t.fp) || 0);
-          return { ...t, idx, tp };
-        })
-        .sort((a, b) => {
-          if (b.tp !== a.tp) return b.tp - a.tp;
-          if (b.cd !== a.cd) return b.cd - a.cd;
-          if (b.fp !== a.fp) return b.fp - a.fp;
-          return a.slot - b.slot;
-        });
+      const stageMap = {
+        overall: "★ 3-MATCH OVERALL STANDINGS ★",
+        m1: "★ MATCH 1 SCOREBOARD ★",
+        m2: "★ MATCH 2 SCOREBOARD ★",
+        m3: "★ MATCH 3 SCOREBOARD ★",
+        slots: "★ REGISTERED SLOT LIST ★"
+      };
+      document.getElementById("viewStage").textContent = stageMap[currentTab] || stageMap.overall;
 
-      const tbody = document.getElementById("standingsBody");
+      const thead = document.getElementById("tableHead");
+      const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
 
-      sorted.forEach((team, i) => {
-        const tr = document.createElement("tr");
-        if (i === 0) tr.className = "top-one";
-        tr.innerHTML = `
-          <td>${pad2(i + 1)}</td>
-          <td><span class="logo-pill">${escapeHtml(team.logo || makeLogoCode(team.name))}</span></td>
-          <td class="left">
-            <span class="team-title">${escapeHtml(team.name)}</span>
-            ${team.igl ? `<span class="igl-line">IGL: ${escapeHtml(team.igl)}</span>` : ""}
-          </td>
-          <td>${pad2(team.cd)}</td>
-          <td>${pad2(team.mp)}</td>
-          <td>${pad2(team.pp)}</td>
-          <td>${pad2(team.fp)}</td>
-          <td>${pad2(team.tp)}</td>
+      if (currentTab === "overall") {
+        thead.innerHTML = `
+          <tr>
+            <th style="width:42px;">RANK</th>
+            <th style="width:44px;">LOGO</th>
+            <th class="left">TEAM NAME</th>
+            <th style="width:36px;">CD</th>
+            <th style="width:36px;">MP</th>
+            <th style="width:40px;">PP</th>
+            <th style="width:40px;">FP</th>
+            <th style="width:44px;">TP</th>
+          </tr>
         `;
-        tbody.appendChild(tr);
-      });
+
+        const rows = appState.teams
+          .map((t, idx) => ({ ...t, idx, stats: computeTeamStats(t) }))
+          .sort((a, b) => b.stats.tp - a.stats.tp || b.stats.cd - a.stats.cd || b.stats.fp - a.stats.fp || a.slot - b.slot);
+
+        rows.forEach((r, i) => {
+          const tr = document.createElement("tr");
+          if (i === 0) tr.className = "rank1";
+          tr.innerHTML = `
+            <td>${pad2(i + 1)}</td>
+            <td><span class="logo-badge">${esc(r.logo)}</span></td>
+            <td class="left">
+              <span class="t-name">${esc(r.name)}</span>
+              ${r.igl ? `<span class="t-igl">IGL: ${esc(r.igl)}</span>` : ""}
+            </td>
+            <td>${pad2(r.stats.cd)}</td>
+            <td>${pad2(r.stats.mp)}</td>
+            <td>${pad2(r.stats.pp)}</td>
+            <td>${pad2(r.stats.fp)}</td>
+            <td>${pad2(r.stats.tp)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else if (currentTab === "m1" || currentTab === "m2" || currentTab === "m3") {
+        const mKey = currentTab;
+        thead.innerHTML = `
+          <tr>
+            <th style="width:42px;">SLOT</th>
+            <th class="left">TEAM NAME</th>
+            <th style="width:52px;">BOOYAH</th>
+            <th style="width:56px;">PP</th>
+            <th style="width:56px;">FP</th>
+            <th style="width:50px;">TP</th>
+          </tr>
+        `;
+
+        appState.teams.forEach((t, idx) => {
+          const m = t[mKey];
+          const tp = (Number(m.pp) || 0) + (Number(m.fp) || 0);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${pad2(t.slot)}</td>
+            <td class="left"><span class="t-name">${esc(t.name)}</span></td>
+            <td><input class="mini-input" type="number" min="0" max="1" value="${m.cd || 0}" data-idx="${idx}" data-m="${mKey}" data-f="cd" /></td>
+            <td><input class="mini-input" type="number" min="0" max="50" value="${m.pp || 0}" data-idx="${idx}" data-m="${mKey}" data-f="pp" /></td>
+            <td><input class="mini-input" type="number" min="0" max="60" value="${m.fp || 0}" data-idx="${idx}" data-m="${mKey}" data-f="fp" /></td>
+            <td>${pad2(tp)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll("input.mini-input").forEach(inp => {
+          inp.addEventListener("input", (e) => {
+            const idx = Number(e.target.dataset.idx);
+            const mk = e.target.dataset.m;
+            const fk = e.target.dataset.f;
+            appState.teams[idx][mk][fk] = Math.max(0, Number(e.target.value) || 0);
+            save();
+            const rowTp = (Number(appState.teams[idx][mk].pp) || 0) + (Number(appState.teams[idx][mk].fp) || 0);
+            e.target.closest("tr").lastElementChild.textContent = pad2(rowTp);
+          });
+        });
+      } else if (currentTab === "slots") {
+        thead.innerHTML = `
+          <tr>
+            <th style="width:46px;">SLOT</th>
+            <th style="width:46px;">LOGO</th>
+            <th class="left">TEAM NAME</th>
+            <th class="left">IGL NAME</th>
+          </tr>
+        `;
+        appState.teams.forEach(t => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${pad2(t.slot)}</td>
+            <td><span class="logo-badge">${esc(t.logo)}</span></td>
+            <td class="left"><span class="t-name">${esc(t.name)}</span></td>
+            <td class="left"><span class="t-igl">${esc(t.igl || "-")}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
     }
 
-    // Direct Image Download (No Print/PDF Dialog)
-    async function downloadPosterDirectlyAsPic() {
-      const target = document.getElementById("posterSheet");
-      const btn = document.getElementById("directDownloadPicBtn");
-      const oldLabel = btn.innerHTML;
-
+    async function downloadPicDirectly() {
+      const target = document.getElementById("exportCard");
+      const btn = document.getElementById("downloadPicBtn");
+      const orig = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = "⏳ Saving PNG...";
+      btn.innerHTML = "⏳ DOWNLOADING PNG...";
 
       try {
-        if (document.fonts && document.fonts.ready) {
-          await document.fonts.ready;
-        }
-
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
         const canvas = await html2canvas(target, {
           scale: 3,
           useCORS: true,
           backgroundColor: "#ffffff",
           logging: false
         });
-
-        const pngUrl = canvas.toDataURL("image/png", 1.0);
+        const url = canvas.toDataURL("image/png", 1.0);
         const a = document.createElement("a");
-        a.href = pngUrl;
-        a.download = "NightmareX-Standings-Poster.png";
+        a.href = url;
+        a.download = "NightmareX-Standings.png";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
       } catch (err) {
-        alert("ছবি ডাউনলোডে সমস্যা হয়েছে: " + err.message);
+        alert("ছবি সেভ করতে সমস্যা হয়েছে: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = oldLabel;
+        btn.innerHTML = orig;
       }
     }
 
-    // Bindings
-    ["weekDayInput", "orgNameInput", "bannerMainInput", "stageBarInput"].forEach((id, idx) => {
-      const keys = ["weekDay", "orgName", "bannerMain", "stageBar"];
-      document.getElementById(id).addEventListener("input", (e) => {
-        data[keys[idx]] = e.target.value;
-        saveData();
-        renderTable();
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentTab = btn.dataset.tab;
+        renderAll();
       });
     });
 
-    document.getElementById("addMatchBtn").addEventListener("click", () => {
-      const teamIdx = Number(document.getElementById("teamSelect").value);
-      const rank = Math.min(12, Math.max(1, Number(document.getElementById("rankInput").value) || 1));
-      const kills = Math.max(0, Number(document.getElementById("killsInput").value) || 0);
-      const earnedPP = placementPtsMap[rank - 1] ?? 0;
-
-      const t = data.teams[teamIdx];
-      t.mp = (Number(t.mp) || 0) + 1;
-      if (rank === 1) t.cd = (Number(t.cd) || 0) + 1;
-      t.pp = (Number(t.pp) || 0) + earnedPP;
-      t.fp = (Number(t.fp) || 0) + kills;
-
-      saveData();
-      renderTable();
+    document.getElementById("toggleSlotEditorBtn").addEventListener("click", () => {
+      document.getElementById("slotEditorBox").classList.toggle("show");
     });
 
-    document.getElementById("resetScoresBtn").addEventListener("click", () => {
-      if (!confirm("সব টিমের CD, MP, PP, FP জিরো করতে চাও?")) return;
-      data.teams.forEach(t => {
-        t.cd = 0;
-        t.mp = 0;
-        t.pp = 0;
-        t.fp = 0;
+    document.getElementById("editDate").addEventListener("input", (e) => {
+      appState.dateLine = e.target.value;
+      save();
+      renderAll();
+    });
+
+    document.getElementById("editBannerTitle").addEventListener("input", (e) => {
+      appState.bannerTitle = e.target.value;
+      save();
+      renderAll();
+    });
+
+    document.getElementById("applySlotListBtn").addEventListener("click", () => {
+      const lines = document.getElementById("pasteSlotTextarea").value
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(Boolean);
+
+      if (!lines.length) return;
+
+      lines.slice(0, 12).forEach((line, i) => {
+        const [teamPart, iglPart] = line.split("|").map(s => (s || "").trim());
+        if (!appState.teams[i]) {
+          appState.teams[i] = {
+            slot: i + 1,
+            logo: "TS",
+            name: `TEAM SLOT ${i + 1}`,
+            igl: "",
+            m1: { pp: 0, fp: 0, cd: 0 },
+            m2: { pp: 0, fp: 0, cd: 0 },
+            m3: { pp: 0, fp: 0, cd: 0 }
+          };
+        }
+        if (teamPart) {
+          appState.teams[i].name = teamPart;
+          appState.teams[i].logo = makeLogo(teamPart);
+        }
+        appState.teams[i].igl = iglPart || "";
       });
-      saveData();
-      renderTable();
+
+      save();
+      renderAll();
+      document.getElementById("slotEditorBox").classList.remove("show");
     });
 
-    document.getElementById("copyWhatsappBtn").addEventListener("click", () => {
-      const ranked = data.teams
-        .map(t => ({ ...t, tp: (Number(t.pp) || 0) + (Number(t.fp) || 0) }))
-        .sort((a, b) => b.tp - a.tp);
+    document.getElementById("downloadPicBtn").addEventListener("click", downloadPicDirectly);
 
-      const lines = [
-        `🏆 *${data.bannerMain}*`,
-        `📅 ${data.weekDay}`,
-        `📊 ${data.stageBar}`,
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("Match 1, Match 2, Match 3-এর সব পয়েন্ট রিসেট করতে চাও?")) return;
+      appState.teams.forEach(t => {
+        t.m1 = { pp: 0, fp: 0, cd: 0 };
+        t.m2 = { pp: 0, fp: 0, cd: 0 };
+        t.m3 = { pp: 0, fp: 0, cd: 0 };
+      });
+      save();
+      renderAll();
+    });
+
+    document.getElementById("copyWaBtn").addEventListener("click", () => {
+      const sorted = appState.teams
+        .map(t => ({ ...t, st: computeTeamStats(t) }))
+        .sort((a, b) => b.st.tp - a.st.tp);
+
+      const text = [
+        `🏆 *${appState.bannerTitle}*`,
+        `📅 ${appState.dateLine}`,
         ""
       ];
-      ranked.forEach((t, i) => {
-        lines.push(`#${pad2(i + 1)} *${t.name}* — ${t.tp} PTS (PP: ${t.pp} | FP: ${t.fp} | CD: ${t.cd})`);
+      sorted.forEach((r, i) => {
+        text.push(`#${pad2(i + 1)} *${r.name}* — ${r.st.tp} PTS (PP: ${r.st.pp} | FP: ${r.st.fp})`);
       });
-
-      navigator.clipboard?.writeText(lines.join("\n"));
+      navigator.clipboard?.writeText(text.join("\n"));
       alert("WhatsApp standings text কপি হয়েছে!");
     });
 
-    document.getElementById("directDownloadPicBtn").addEventListener("click", downloadPosterDirectlyAsPic);
-
-    loadData();
-    renderSlotsEditor();
-    renderTable();
+    load();
+    renderAll();
   </script>
 </body>
 </html>
