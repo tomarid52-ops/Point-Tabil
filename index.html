@@ -14,13 +14,10 @@
       --card-bg: #ffffff;
       --green-deep: #14532d;
       --green-mid: #16803c;
-      --green-bright: #1ea84f;
       --row-bg: #e7f6cf;
       --row-top: #fef08a;
-      --gold: #f59e0b;
       --blue-btn: #0284c7;
       --text-dark: #0f172a;
-      --text-muted: #475569;
     }
 
     * {
@@ -38,7 +35,7 @@
     }
 
     .wrap {
-      max-width: 760px;
+      max-width: 780px;
       margin: 0 auto;
     }
 
@@ -113,7 +110,15 @@
       border-color: var(--green-deep);
     }
 
-    /* Updated High-Impact Poster Banner */
+    /* Exportable Poster + Table */
+    .export-card {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
     .poster-banner {
       position: relative;
       background: linear-gradient(135deg, #062111 0%, #14532d 55%, #062111 100%);
@@ -189,39 +194,34 @@
       border-radius: 6px;
     }
 
-    /* Exportable Table Card */
-    .export-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 10px;
-    }
-
     .board {
       background: var(--green-deep);
       border-radius: 12px;
-      padding: 7px 7px 9px;
-      overflow-x: auto;
+      padding: 7px 6px 9px;
+      width: 100%;
     }
 
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: separate;
       border-spacing: 0 5px;
-      min-width: 480px;
     }
 
     thead th {
       color: #dcfce7;
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       font-weight: 700;
-      letter-spacing: 0.7px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      padding: 4px 6px;
+      padding: 4px 3px;
       text-align: center;
+      white-space: nowrap;
     }
 
     thead th.left {
       text-align: left;
+      padding-left: 6px;
     }
 
     tbody tr {
@@ -233,16 +233,20 @@
     }
 
     tbody td {
-      padding: 6px 6px;
-      font-size: 0.8rem;
+      padding: 6px 3px;
+      font-size: 0.76rem;
       font-weight: 700;
       text-align: center;
       vertical-align: middle;
       color: var(--text-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     tbody td.left {
       text-align: left;
+      padding-left: 6px;
     }
 
     tbody td:first-child {
@@ -254,45 +258,50 @@
     tbody td:last-child {
       border-top-right-radius: 7px;
       border-bottom-right-radius: 7px;
-      background: rgba(20, 83, 45, 0.14);
-      font-size: 0.86rem;
+      background: rgba(20, 83, 45, 0.16);
+      font-size: 0.82rem;
+      font-weight: 700;
     }
 
     .logo-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 25px;
-      height: 21px;
+      width: 24px;
+      height: 20px;
       border-radius: 5px;
       background: #0f4c2a;
       color: #fff;
-      font-size: 0.66rem;
+      font-size: 0.64rem;
       font-weight: 700;
     }
 
     .t-name {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: #0f172a;
       line-height: 1.1;
       text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .t-igl {
       display: block;
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 600;
       color: #334155;
       margin-top: 1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .mini-input {
-      width: 44px;
-      padding: 3px 4px;
+      width: 42px;
+      padding: 3px 3px;
       text-align: center;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 700;
       border-radius: 5px;
       border: 1px solid #86efac;
@@ -308,9 +317,9 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 700;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       color: var(--green-deep);
       text-transform: uppercase;
     }
@@ -396,6 +405,26 @@
       .banner-edit-grid {
         grid-template-columns: 1fr;
       }
+      thead th {
+        font-size: 0.54rem;
+        padding: 4px 1px;
+        letter-spacing: 0;
+      }
+      tbody td {
+        font-size: 0.7rem;
+        padding: 5px 1px;
+      }
+      .t-name {
+        font-size: 0.68rem;
+      }
+      .t-igl {
+        font-size: 0.54rem;
+      }
+      .logo-badge {
+        width: 20px;
+        height: 18px;
+        font-size: 0.56rem;
+      }
     }
   </style>
 </head>
@@ -438,6 +467,16 @@
 
         <div class="board">
           <table>
+            <colgroup>
+              <col style="width: 8%;" />
+              <col style="width: 8%;" />
+              <col style="width: 34%;" />
+              <col style="width: 13%;" />
+              <col style="width: 8%;" />
+              <col style="width: 9%;" />
+              <col style="width: 9%;" />
+              <col style="width: 16%;" />
+            </colgroup>
             <thead id="tableHead"></thead>
             <tbody id="tableBody"></tbody>
           </table>
@@ -464,7 +503,7 @@
   </div>
 
   <script>
-    const KEY = "nx_3match_points_v4";
+    const KEY = "nx_3match_points_v5";
     let currentTab = "overall";
 
     const defaultTeams = [
@@ -525,17 +564,17 @@
 
     function computeTeamStats(t) {
       const matches = [t.m1, t.m2, t.m3];
-      let cd = 0, mp = 0, pp = 0, fp = 0;
+      let booyah = 0, mp = 0, pp = 0, fp = 0;
       matches.forEach(m => {
         const mpp = Number(m.pp) || 0;
         const mfp = Number(m.fp) || 0;
         const mcd = Number(m.cd) || 0;
         if (mpp > 0 || mfp > 0 || mcd > 0) mp += 1;
-        cd += mcd;
+        booyah += mcd;
         pp += mpp;
         fp += mfp;
       });
-      return { cd, mp, pp, fp, tp: pp + fp };
+      return { booyah, mp, pp, fp, tp: pp + fp };
     }
 
     function renderAll() {
@@ -561,20 +600,20 @@
       if (currentTab === "overall") {
         thead.innerHTML = `
           <tr>
-            <th style="width:42px;">RANK</th>
-            <th style="width:44px;">LOGO</th>
+            <th>RANK</th>
+            <th>LOGO</th>
             <th class="left">TEAM NAME</th>
-            <th style="width:36px;">CD</th>
-            <th style="width:36px;">MP</th>
-            <th style="width:40px;">PP</th>
-            <th style="width:40px;">FP</th>
-            <th style="width:44px;">TP</th>
+            <th>BOOYAH</th>
+            <th>MP</th>
+            <th>PP</th>
+            <th>FP</th>
+            <th>TP</th>
           </tr>
         `;
 
         const rows = appState.teams
           .map((t, idx) => ({ ...t, idx, stats: computeTeamStats(t) }))
-          .sort((a, b) => b.stats.tp - a.stats.tp || b.stats.cd - a.stats.cd || b.stats.fp - a.stats.fp || a.slot - b.slot);
+          .sort((a, b) => b.stats.tp - a.stats.tp || b.stats.booyah - a.stats.booyah || b.stats.fp - a.stats.fp || a.slot - b.slot);
 
         rows.forEach((r, i) => {
           const tr = document.createElement("tr");
@@ -586,7 +625,7 @@
               <span class="t-name">${esc(r.name)}</span>
               ${r.igl ? `<span class="t-igl">IGL: ${esc(r.igl)}</span>` : ""}
             </td>
-            <td>${pad2(r.stats.cd)}</td>
+            <td>${pad2(r.stats.booyah)}</td>
             <td>${pad2(r.stats.mp)}</td>
             <td>${pad2(r.stats.pp)}</td>
             <td>${pad2(r.stats.fp)}</td>
@@ -598,12 +637,12 @@
         const mKey = currentTab;
         thead.innerHTML = `
           <tr>
-            <th style="width:42px;">SLOT</th>
-            <th class="left">TEAM NAME</th>
-            <th style="width:52px;">BOOYAH</th>
-            <th style="width:56px;">PP</th>
-            <th style="width:56px;">FP</th>
-            <th style="width:50px;">TP</th>
+            <th style="width:9%;">SLOT</th>
+            <th class="left" style="width:39%;">TEAM NAME</th>
+            <th style="width:14%;">BOOYAH</th>
+            <th style="width:13%;">PP</th>
+            <th style="width:13%;">FP</th>
+            <th style="width:12%;">TP</th>
           </tr>
         `;
 
@@ -636,10 +675,10 @@
       } else if (currentTab === "slots") {
         thead.innerHTML = `
           <tr>
-            <th style="width:46px;">SLOT</th>
-            <th style="width:46px;">LOGO</th>
-            <th class="left">TEAM NAME</th>
-            <th class="left">IGL NAME</th>
+            <th style="width:12%;">SLOT</th>
+            <th style="width:12%;">LOGO</th>
+            <th class="left" style="width:40%;">TEAM NAME</th>
+            <th class="left" style="width:36%;">IGL NAME</th>
           </tr>
         `;
         appState.teams.forEach(t => {
@@ -660,16 +699,31 @@
       const btn = document.getElementById("downloadPicBtn");
       const orig = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = "⏳ DOWNLOADING PNG...";
+      btn.innerHTML = "⏳ DOWNLOADING FULL PNG...";
 
       try {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+        const exportWidth = 720;
         const canvas = await html2canvas(target, {
-          scale: 3,
+          scale: 2.5,
           useCORS: true,
           backgroundColor: "#ffffff",
-          logging: false
+          width: exportWidth,
+          windowWidth: exportWidth,
+          scrollX: 0,
+          scrollY: 0,
+          logging: false,
+          onclone: (clonedDoc) => {
+            const clonedCard = clonedDoc.getElementById("exportCard");
+            if (clonedCard) {
+              clonedCard.style.width = exportWidth + "px";
+              clonedCard.style.maxWidth = exportWidth + "px";
+              clonedCard.style.overflow = "visible";
+            }
+          }
         });
+
         const url = canvas.toDataURL("image/png", 1.0);
         const a = document.createElement("a");
         a.href = url;
