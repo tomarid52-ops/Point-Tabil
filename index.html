@@ -149,6 +149,16 @@
       margin-bottom: 8px;
     }
 
+    .rules-note {
+      font-size: 0.72rem;
+      color: #e9d5ff;
+      background: rgba(88, 28, 135, 0.35);
+      border: 1px solid rgba(192, 132, 252, 0.25);
+      border-radius: 8px;
+      padding: 7px 10px;
+      margin-bottom: 10px;
+    }
+
     /* =======================================================
        NIGHTMARE X PURPLE-GOLD ESPORTS POSTER SHEET
        ======================================================= */
@@ -372,7 +382,7 @@
     }
 
     .score-inp {
-      width: 42px;
+      width: 44px;
       padding: 3px 3px;
       text-align: center;
       font-size: 0.72rem;
@@ -411,7 +421,6 @@
       color: #e9d5ff;
     }
 
-    /* Actions */
     .btn-download-pic {
       width: 100%;
       background: linear-gradient(135deg, #facc15, #eab308);
@@ -490,6 +499,10 @@
         <button class="tab-btn" data-tab="slots" type="button">Slot List</button>
       </div>
 
+      <div class="rules-note">
+        ⚡ <b>Placement Rule:</b> #1 = 12 PP • #2 = 9 PP • #3 = 8 PP • #4 = 7 PP • #5 = 6 PP • #6 = 5 PP • #7 = 4 PP • #8 = 3 PP • #9 = 2 PP • #10 = 1 PP • #11–12 = 0 PP | 1 Kill = 1 FP
+      </div>
+
       <div id="editorPanel" class="slot-editor">
         <div class="edit-grid">
           <input type="text" id="inputBrand" placeholder="Main Title (e.g. NIGHTMARE X)" />
@@ -549,22 +562,24 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "nx_purple_scrims_v1";
+    const STORAGE_KEY = "nx_purple_scrims_v2";
+    const PLACEMENT_POINTS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
     let activeTab = "overall";
 
+    // rank: 0 = unplayed/no rank, 1..12 = placement rank
     const initialSquads = [
-      { slot: 1, logo: "PE", name: "PIRATE ESPORTS", igl: "Shuvo", m1: { pp: 12, fp: 10, cd: 0 }, m2: { pp: 9, fp: 7, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 2, logo: "NX", name: "NIGHTMARE X", igl: "Nx shahin", m1: { pp: 8, fp: 6, cd: 1 }, m2: { pp: 6, fp: 6, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 3, logo: "BP", name: "BLACK PANTHER", igl: "BP HUNTAR", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 4, logo: "TEC", name: "TEC", igl: "blade", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 5, logo: "NX", name: "NIGHTMARE X", igl: "NX J!HAD", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 6, logo: "EH", name: "ELITE HAVOC", igl: "EH.MIKAGE", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 7, logo: "MF", name: "MAX FREM", igl: "MF RAJ!", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 8, logo: "SX", name: "SAVAGE X", igl: "ZYN TAMIM", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 9, logo: "TS9", name: "TEAM SLOT 9", igl: "-", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 10, logo: "T10", name: "TEAM SLOT 10", igl: "-", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 11, logo: "T11", name: "TEAM SLOT 11", igl: "-", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } },
-      { slot: 12, logo: "T12", name: "TEAM SLOT 12", igl: "-", m1: { pp: 0, fp: 0, cd: 0 }, m2: { pp: 0, fp: 0, cd: 0 }, m3: { pp: 0, fp: 0, cd: 0 } }
+      { slot: 1, logo: "PE", name: "PIRATE ESPORTS", igl: "Shuvo", m1: { rank: 1, fp: 10 }, m2: { rank: 2, fp: 7 }, m3: { rank: 0, fp: 0 } },
+      { slot: 2, logo: "NX", name: "NIGHTMARE X", igl: "Nx shahin", m1: { rank: 3, fp: 6 }, m2: { rank: 4, fp: 6 }, m3: { rank: 0, fp: 0 } },
+      { slot: 3, logo: "BP", name: "BLACK PANTHER", igl: "BP HUNTAR", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 4, logo: "TEC", name: "TEC", igl: "blade", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 5, logo: "NX", name: "NIGHTMARE X", igl: "NX J!HAD", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 6, logo: "EH", name: "ELITE HAVOC", igl: "EH.MIKAGE", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 7, logo: "MF", name: "MAX FREM", igl: "MF RAJ!", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 8, logo: "SX", name: "SAVAGE X", igl: "ZYN TAMIM", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 9, logo: "TS9", name: "TEAM SLOT 9", igl: "-", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 10, logo: "T10", name: "TEAM SLOT 10", igl: "-", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 11, logo: "T11", name: "TEAM SLOT 11", igl: "-", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } },
+      { slot: 12, logo: "T12", name: "TEAM SLOT 12", igl: "-", m1: { rank: 0, fp: 0 }, m2: { rank: 0, fp: 0 }, m3: { rank: 0, fp: 0 } }
     ];
 
     let state = {
@@ -572,6 +587,14 @@
       sub: "OFFICIAL • DAILY SCRIM",
       teams: structuredClone(initialSquads)
     };
+
+    function getPPByRank(rank) {
+      const r = Number(rank) || 0;
+      if (r >= 1 && r <= PLACEMENT_POINTS.length) {
+        return PLACEMENT_POINTS[r - 1];
+      }
+      return 0;
+    }
 
     function esc(s) {
       return String(s || "")
@@ -606,9 +629,11 @@
     function calcOverall(team) {
       let placePoint = 0, killPoint = 0, booyah = 0;
       [team.m1, team.m2, team.m3].forEach(m => {
-        placePoint += Number(m.pp) || 0;
-        killPoint += Number(m.fp) || 0;
-        booyah += Number(m.cd) || 0;
+        const rank = Number(m.rank) || 0;
+        const fp = Number(m.fp) || 0;
+        placePoint += getPPByRank(rank);
+        killPoint += fp;
+        if (rank === 1) booyah += 1;
       });
       return {
         placePoint,
@@ -675,25 +700,27 @@
         thead.innerHTML = `
           <tr>
             <th style="width:9%;">SLOT</th>
-            <th class="left" style="width:33%;">TEAM NAME</th>
-            <th style="width:15%;">PLACE PT</th>
+            <th class="left" style="width:31%;">TEAM NAME</th>
+            <th style="width:15%;">PLACE #</th>
             <th style="width:15%;">KILL PT</th>
-            <th style="width:14%;">BOOYAH</th>
-            <th style="width:14%;">TOTAL</th>
+            <th style="width:14%;">AUTO PP</th>
+            <th style="width:16%;">TOTAL</th>
           </tr>
         `;
 
         state.teams.forEach((t, idx) => {
           const m = t[mk];
-          const tot = (Number(m.pp) || 0) + (Number(m.fp) || 0);
+          const pp = getPPByRank(m.rank);
+          const fp = Number(m.fp) || 0;
+          const tot = pp + fp;
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>#${t.slot}</td>
             <td class="left"><span class="team-title">${esc(t.name)}</span></td>
-            <td><input class="score-inp" type="number" min="0" max="50" value="${m.pp || 0}" data-idx="${idx}" data-m="${mk}" data-f="pp" /></td>
-            <td><input class="score-inp" type="number" min="0" max="60" value="${m.fp || 0}" data-idx="${idx}" data-m="${mk}" data-f="fp" /></td>
-            <td><input class="score-inp" type="number" min="0" max="1" value="${m.cd || 0}" data-idx="${idx}" data-m="${mk}" data-f="cd" /></td>
-            <td>${tot}</td>
+            <td><input class="score-inp" type="number" min="0" max="12" value="${m.rank || 0}" data-idx="${idx}" data-m="${mk}" data-f="rank" /></td>
+            <td><input class="score-inp" type="number" min="0" max="60" value="${fp}" data-idx="${idx}" data-m="${mk}" data-f="fp" /></td>
+            <td class="auto-pp-cell">${pp}</td>
+            <td class="auto-tot-cell">${tot}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -703,10 +730,16 @@
             const idx = Number(e.target.dataset.idx);
             const mk = e.target.dataset.m;
             const fk = e.target.dataset.f;
-            state.teams[idx][mk][fk] = Math.max(0, Number(e.target.value) || 0);
+            let val = Math.max(0, Number(e.target.value) || 0);
+            if (fk === "rank") val = Math.min(12, val);
+            state.teams[idx][mk][fk] = val;
             saveState();
-            const updatedTot = (Number(state.teams[idx][mk].pp) || 0) + (Number(state.teams[idx][mk].fp) || 0);
-            e.target.closest("tr").lastElementChild.textContent = updatedTot;
+
+            const newPP = getPPByRank(state.teams[idx][mk].rank);
+            const newFP = Number(state.teams[idx][mk].fp) || 0;
+            const row = e.target.closest("tr");
+            row.querySelector(".auto-pp-cell").textContent = newPP;
+            row.querySelector(".auto-tot-cell").textContent = newPP + newFP;
           });
         });
       } else if (activeTab === "slots") {
@@ -805,9 +838,9 @@
               logo: `T${i + 1}`,
               name: `TEAM SLOT ${i + 1}`,
               igl: "-",
-              m1: { pp: 0, fp: 0, cd: 0 },
-              m2: { pp: 0, fp: 0, cd: 0 },
-              m3: { pp: 0, fp: 0, cd: 0 }
+              m1: { rank: 0, fp: 0 },
+              m2: { rank: 0, fp: 0 },
+              m3: { rank: 0, fp: 0 }
             };
           }
           if (teamPart) {
@@ -828,9 +861,9 @@
     document.getElementById("resetBtn").addEventListener("click", () => {
       if (!confirm("সব ম্যাচের পয়েন্ট রিসেট করতে চাও?")) return;
       state.teams.forEach(t => {
-        t.m1 = { pp: 0, fp: 0, cd: 0 };
-        t.m2 = { pp: 0, fp: 0, cd: 0 };
-        t.m3 = { pp: 0, fp: 0, cd: 0 };
+        t.m1 = { rank: 0, fp: 0 };
+        t.m2 = { rank: 0, fp: 0 };
+        t.m3 = { rank: 0, fp: 0 };
       });
       saveState();
       renderBoard();
